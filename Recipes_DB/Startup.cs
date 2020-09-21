@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Recipes_DB.Models;
 
 namespace Recipes_DB
 {
@@ -25,7 +27,17 @@ namespace Recipes_DB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           //1. controllers 
             services.AddControllers();
+
+            //2. Context 
+            var connectionString = Configuration.GetConnectionString("Recipes_DB");
+
+            services.AddDbContext<Recipes_DB1Context>(options =>          options.UseSqlServer(connectionString));
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
