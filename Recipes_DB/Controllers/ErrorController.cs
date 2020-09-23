@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Recipes_DB.Models;
 
 namespace Recipes_DB.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("Error/")]
     [ApiController]
     public class ErrorController : ControllerBase
@@ -38,18 +40,39 @@ namespace Recipes_DB.Controllers
                         exceptionMessage = new ExceptionMessageUser()
                         {
                             Error = "Request Error",
-                            Message = $"Jouw request bevat een fout met status code {statusCode}",
-                            ErrorRoute = "Jouw Request: " + statusCodeData?.OriginalPath
+                            Message = $"Jouw request bevat een fout met status code {statusCode}. {errorMessage}",
+                            
+                            ErrorRoute = (statusCodeData?.OriginalPath != null) ? "Jouw route:" + (statusCodeData?.OriginalPath != null) : null
                         };
                         break;
 
                     case int n when (statusCode >= 500 && statusCode < 600):
-                        //TODO: verder uit te werken errorcontroller bij statuscodes 
+                        //TODO: ErrorController verder uit te werken voor statuscodes groter dan 500
+                        exceptionMessage = new ExceptionMessageUser()
+                        { Message = "TODO: nog niet geïmplementeerd" };
                         break;
                 }
             }
-            //JsonResult of StatusCode zorgt voor serialisatie (obj -> string), System.Text.JsonSerialize onnodig
-            return StatusCode(statusCode.Value, exceptionMessage);
+            //JsonResult of StatusCode zorgt voor serialisatie (obj -> string), System.Text.Json.JsonSerializer onnodig tenzij voor NullValueHandling
+            var result = JsonConvert.SerializeObject(exceptionMessage, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            return StatusCode(statusCode.Value,  result );
+        }
+
+
+        //[Route("/error")] //zorgt voor swagger error
+        [HttpGet("/error")]
+        public IActionResult Error()
+        {
+
+            //1. algemen error pagina 
+            // return Problem(); //engels - standaard 
+
+            //2. return vanuit controller 
+            //return Ok(new ExceptionMessageUser {Message= "Sorry ... " });
+
+            //3. Handler gebruiken 
+            return HandleErrorCode(500, "Sorry ... algemene fout.Probeer opnieuw  ");
+
         }
 
     }
