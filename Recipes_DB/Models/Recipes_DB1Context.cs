@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Recipes_DB.Data;
 
 namespace Recipes_DB.Models
 {
@@ -60,6 +61,9 @@ namespace Recipes_DB.Models
             });
 
             OnModelCreatingPartial(modelBuilder);
+
+            modelBuilder.Seed();
+           // ModelBuilder.Seed(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

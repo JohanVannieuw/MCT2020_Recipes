@@ -1,0 +1,25 @@
+2020-09-28 12:43:29.801 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 12:51:24.702 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 13:00:48.475 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 13:04:10.731 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 13:05:01.831 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 13:25:12.841 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 13:27:33.300 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 14:08:49.023 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 14:24:40.164 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 14:27:31.433 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 14:30:57.148 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 14:33:12.868 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 16:11:42.554 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 16:40:06.112 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 16:51:03.819 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 17:03:51.453 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 17:38:15.130 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 17:39:17.231 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 17:59:47.242 +02:00 [Warning] 1001 - CategorieController: Exceptie bij toevoegen van string: entity could not be saved
+2020-09-28 18:05:34.870 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 18:07:20.968 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 22:35:14.038 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 22:43:59.798 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 22:48:17.437 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-28 23:09:41.584 +02:00 [Warning] 0000 Serilog Warning test.

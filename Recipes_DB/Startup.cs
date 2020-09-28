@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,18 +55,50 @@ namespace Recipes_DB
             ////5. Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "Recipes_DB",
-                    Version = "v1"
-                });
+                c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "RecipesAPI v1.0", Version = "v1.0" });
+                c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "RecipesAPI latest", Version = "v2.0" });
             });
 
+
             ////6. Serilog
-            Log.Logger = new LoggerConfiguration()
+          Log.Logger = new LoggerConfiguration()
       .MinimumLevel.Warning()
       .WriteTo.RollingFile(hostingEnvironment.ContentRootPath + "Serilogs/Recipes_DBLogging-{Date}.txt")
       .CreateLogger();
+
+            //7. XML formatter
+            services.AddControllers(options =>
+            {
+                options.RespectBrowserAcceptHeader = true;//gebruik headers (default:false =>Json)
+                options.ReturnHttpNotAcceptable = true; //Not Acceptable media type returnt 406
+                                                        //specifieke XML formatter
+                options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+            }).AddXmlSerializerFormatters();  //voegt de standard XML formatter toe (v3)
+
+            //8. ratelimiting 
+            //Rate limiting
+            //opzetten van MemoryCache om rates te bewaren
+            services.AddMemoryCache();
+
+            //één of meerdere RateLimitRules definiëren in appSettings.json
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+
+            //Singletons voor stokeren vd waarden
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            //9.Versioning
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0); //major, minor >> komt in controller
+                options.AssumeDefaultVersionWhenUnspecified = true;
+              //  options.ApiVersionReader = new System.Web.Mvc.QueryStringOrHeaderApiVersionReader("x-api-version");
+            });
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,11 +117,15 @@ namespace Recipes_DB
                 app.UseExceptionHandler("/error");
             }
 
+           // app.UseIpRateLimiting();
+
+
             app.UseSwagger(); //enable swagger
             app.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = "swagger"; //path naar de UI: /swagger/index.html
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Recipes_DB v1");
+                c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Recipes_DB v1.0");
+                c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "Recipes_DB latest");
             });
 
             app.UseHttpsRedirection();

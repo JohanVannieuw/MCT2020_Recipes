@@ -16,8 +16,13 @@ namespace Recipes_DB.Controllers
     //TODO: CategoryController: PUT en DELETE context niet meer gebruiken , overal DTO's gebruiken 
 
 
+
+    //https://localhost:44390/api/categories?api-version=2.0
     [Route("api/[controller]")]
+    // https://localhost:44390/api/2.0/categories  via Route:
+    //[Route("api/{version:apiVersion}/[controller]")] 
     [ApiController]
+    [ApiVersion("1.0")]
     public class CategoriesController : ControllerBase
     {
         private readonly Recipes_DB1Context _context;
@@ -152,6 +157,7 @@ namespace Recipes_DB.Controllers
 
 
         // DELETE: api/Categories/5
+        [MapToApiVersion("2.0")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
