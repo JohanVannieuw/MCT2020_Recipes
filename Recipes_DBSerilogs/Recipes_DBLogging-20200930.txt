@@ -1,0 +1,6 @@
+2020-09-30 10:59:26.557 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-30 11:00:42.900 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-30 11:04:00.498 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-30 11:21:16.699 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-30 11:37:11.473 +02:00 [Warning] 0000 Serilog Warning test.
+2020-09-30 11:39:50.491 +02:00 [Warning] 0000 Serilog Warning test.

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
 using AutoMapper;
@@ -45,18 +47,39 @@ namespace Recipes_DB
 
             services.AddDbContext<Recipes_DB1Context>(options => options.UseSqlServer(connectionString));
 
-            //3. Repos 
-            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+            //2b. Cors 
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("MyAllowOrigins", builder =>
+            //    {
+            //        builder.AllowAnyMethod()
+            //        .AllowAnyHeader()
+            //        .AllowAnyOrigin()
+            //        //.WithOrigins("https://localhost:44341", "http:////localhost:8080")
+            //        .AllowCredentials()
+            //        ;
+            //    });
+            //});
+
+                //3. Repos 
+                services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             //services.AddScoped(typeof(IRecipeRepo<>), typeof(RecipeRepo<>));
 
             ////4. Mapper 
             services.AddAutoMapper(typeof(Recipes_DBProfiles));
 
             ////5. Swagger
+            ///
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //2. Include de xml file
+       
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "RecipesAPI v1.0", Version = "v1.0" });
                 c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "RecipesAPI latest", Version = "v2.0" });
+                c.IncludeXmlComments(xmlPath);
             });
 
 
@@ -97,6 +120,13 @@ namespace Recipes_DB
               //  options.ApiVersionReader = new System.Web.Mvc.QueryStringOrHeaderApiVersionReader("x-api-version");
             });
 
+            //10. Caching 
+            services.AddResponseCaching();
+
+            //11. Extra docs - Swagger  >> zie hoger 
+            
+
+
 
 
         }
@@ -108,6 +138,9 @@ namespace Recipes_DB
             Log.Logger.Warning("0000 Serilog Warning test."); //Serilog voorziet zelf  tijd
             //env.EnvironmentName = "Production";  
 
+            //app.UseCors("MyAllowOrigins");
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -117,9 +150,9 @@ namespace Recipes_DB
                 app.UseExceptionHandler("/error");
             }
 
-           // app.UseIpRateLimiting();
+            // app.UseIpRateLimiting();
 
-
+            app.UseResponseCaching();
             app.UseSwagger(); //enable swagger
             app.UseSwaggerUI(c =>
             {

@@ -30,7 +30,12 @@ namespace Recipes_DB.Controllers
         }
 
         // GET: api/Recipes
+        /// <summary>
+        /// Haalt gerechten op en cacht voor 30 seconden.
+        /// </summary>
+
         [HttpGet]
+        [ResponseCache(VaryByHeader = "User-Agent", Duration = 30)]
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipe()
         {
             return await _context.Recipe.ToListAsync();
@@ -130,6 +135,10 @@ namespace Recipes_DB.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
             _context.Recipe.Add(recipe);

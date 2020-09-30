@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Recipes_DB.Helpers;
 using Recipes_DB.Models;
 using Serilog;
 
@@ -30,30 +32,50 @@ namespace Recipes_DB.Controllers
         private readonly IGenericRepo<Recipe> genericRecipeRepo;
         private readonly IMapper mapper;
         private readonly ILogger<CategoriesController> logger;
+        private readonly IMemoryCache memoryCache;
 
-        public CategoriesController(Recipes_DB1Context context, IGenericRepo<Category> genericRepo, IGenericRepo<Recipe> genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger)
+        public CategoriesController(Recipes_DB1Context context, IGenericRepo<Category> genericRepo, IGenericRepo<Recipe> genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache)
         {
             _context = context;
             this.genericRepo = genericRepo;
             this.genericRecipeRepo = genericRecipeRepo;
             this.mapper = mapper;
             this.logger = logger;
+            this.memoryCache = memoryCache;
         }
 
         // GET: api/Categories
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategory()
         {
-            var categories = await genericRepo.GetAllAsync();
-            //relaties -> recipes
-            foreach (Category c in categories)
-            {
-                var recipes = await genericRecipeRepo.GetByExpressionAsync(r => r.CategoryId == c.Id);
-                c.Recipes = (ICollection<Recipe>)recipes;
 
+            IEnumerable<Category> categoriesCached;
+
+            // if cache ? aanmaken of gebruiken
+            if (!memoryCache.TryGetValue(CacheKeys.CategoriesCacheKey, out categoriesCached)) {
+
+                categoriesCached = await genericRepo.GetAllAsync();
+                //relaties -> recipes
+                foreach (Category c in categoriesCached)
+                {
+                    var recipes = await genericRecipeRepo.GetByExpressionAsync(r => r.CategoryId == c.Id);
+                    c.Recipes = (ICollection<Recipe>)recipes;
+
+                }
+
+                //2. Set options 
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                 .SetSize(10)
+         .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+                //3. Save data in cache 
+                memoryCache.Set(CacheKeys.CategoriesCacheKey, categoriesCached, cacheEntryOptions);
+            }
+            else {
+                categoriesCached = (ICollection<Category>)memoryCache.Get(CacheKeys.CategoriesCacheKey);
             }
 
-            var categoriesDTO = mapper.Map<IEnumerable<CategoryDTO>>(categories);
+            var categoriesDTO = mapper.Map<IEnumerable<CategoryDTO>>(categoriesCached);
             
              return Ok(categoriesDTO);
         }
