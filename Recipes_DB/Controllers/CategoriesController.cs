@@ -11,6 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Recipes_DB.Helpers;
 using Recipes_DB.Models;
+using Recipes_DB.Repositories;
 using Serilog;
 
 namespace Recipes_DB.Controllers
@@ -29,14 +30,14 @@ namespace Recipes_DB.Controllers
     {
         private readonly Recipes_DB1Context _context;
         private readonly IGenericRepo<Category> genericRepo;
-        private readonly IGenericRepo<Recipe> genericRecipeRepo;
+        private readonly IRecipeRepo genericRecipeRepo;
         private readonly IMapper mapper;
         private readonly ILogger<CategoriesController> logger;
         private readonly IMemoryCache memoryCache;
 
-        public CategoriesController(Recipes_DB1Context context, IGenericRepo<Category> genericRepo, IGenericRepo<Recipe> genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache)
+        public CategoriesController(Recipes_DB1Context context, IGenericRepo<Category> genericRepo, IRecipeRepo genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache)
         {
-            _context = context;
+           // _context = context;
             this.genericRepo = genericRepo;
             this.genericRecipeRepo = genericRecipeRepo;
             this.mapper = mapper;
@@ -46,7 +47,7 @@ namespace Recipes_DB.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategory()
+        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
         {
 
             IEnumerable<Category> categoriesCached;

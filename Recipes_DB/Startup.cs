@@ -48,21 +48,21 @@ namespace Recipes_DB
             services.AddDbContext<Recipes_DB1Context>(options => options.UseSqlServer(connectionString));
 
             //2b. Cors 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("MyAllowOrigins", builder =>
-            //    {
-            //        builder.AllowAnyMethod()
-            //        .AllowAnyHeader()
-            //        .AllowAnyOrigin()
-            //        //.WithOrigins("https://localhost:44341", "http:////localhost:8080")
-            //        .AllowCredentials()
-            //        ;
-            //    });
-            //});
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyAllowOrigins", builder =>
+                {
+                    builder.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    //.AllowAnyOrigin() // niet toegelaten indien credentials
+                    .WithOrigins("https://localhost", "http://localhost")
+                    .AllowCredentials()
+                    ;
+                });
+            });
 
-                //3. Repos 
-                services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+            //3. Repos 
+            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             //services.AddScoped(typeof(IRecipeRepo<>), typeof(RecipeRepo<>));
 
             ////4. Mapper 
@@ -125,10 +125,6 @@ namespace Recipes_DB
 
             //11. Extra docs - Swagger  >> zie hoger 
             
-
-
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,7 +134,7 @@ namespace Recipes_DB
             Log.Logger.Warning("0000 Serilog Warning test."); //Serilog voorziet zelf  tijd
             //env.EnvironmentName = "Production";  
 
-            //app.UseCors("MyAllowOrigins");
+            app.UseCors("MyAllowOrigins");
 
 
             if (env.IsDevelopment())
