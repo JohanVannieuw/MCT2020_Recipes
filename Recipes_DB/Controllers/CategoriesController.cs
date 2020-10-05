@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
@@ -16,10 +17,6 @@ using Serilog;
 
 namespace Recipes_DB.Controllers
 {
-    //TODO: CategoryController: PUT en DELETE context niet meer gebruiken , overal DTO's gebruiken 
-
-
-
     //https://localhost:44390/api/categories?api-version=2.0
     [Route("api/[controller]")]
     // https://localhost:44390/api/2.0/categories  via Route:
@@ -28,16 +25,15 @@ namespace Recipes_DB.Controllers
     [ApiVersion("1.0")]
     public class CategoriesController : ControllerBase
     {
-        private readonly Recipes_DB1Context _context;
         private readonly IGenericRepo<Category> genericRepo;
         private readonly IRecipeRepo genericRecipeRepo;
         private readonly IMapper mapper;
         private readonly ILogger<CategoriesController> logger;
         private readonly IMemoryCache memoryCache;
 
-        public CategoriesController(Recipes_DB1Context context, IGenericRepo<Category> genericRepo, IRecipeRepo genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache)
+        public CategoriesController(IGenericRepo<Category> genericRepo, IRecipeRepo genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache)
         {
-           // _context = context;
+            // _context = context;  //hier geen context meer bij een repo pattern.
             this.genericRepo = genericRepo;
             this.genericRecipeRepo = genericRecipeRepo;
             this.mapper = mapper;
@@ -53,7 +49,8 @@ namespace Recipes_DB.Controllers
             IEnumerable<Category> categoriesCached;
 
             // if cache ? aanmaken of gebruiken
-            if (!memoryCache.TryGetValue(CacheKeys.CategoriesCacheKey, out categoriesCached)) {
+            if (!memoryCache.TryGetValue(CacheKeys.CategoriesCacheKey, out categoriesCached))
+            {
 
                 categoriesCached = await genericRepo.GetAllAsync();
                 //relaties -> recipes
@@ -67,30 +64,34 @@ namespace Recipes_DB.Controllers
                 //2. Set options 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                  .SetSize(10)
-         .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+         .SetSlidingExpiration(TimeSpan.FromMinutes(1));
 
                 //3. Save data in cache 
                 memoryCache.Set(CacheKeys.CategoriesCacheKey, categoriesCached, cacheEntryOptions);
             }
-            else {
+            else
+            {
                 categoriesCached = (ICollection<Category>)memoryCache.Get(CacheKeys.CategoriesCacheKey);
             }
 
             var categoriesDTO = mapper.Map<IEnumerable<CategoryDTO>>(categoriesCached);
-            
-             return Ok(categoriesDTO);
+
+            return Ok(categoriesDTO);
         }
 
         // GET: api/Categories/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CategoryDTO>> GetCategory(int id)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(Category), (int)HttpStatusCode.OK)]
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<CategoryDTO>> GetCategoryById(int id)
         {
             var categories = await genericRepo.GetByExpressionAsync(m => m.Id == id);
-           
+
             // Vergeet de count niet! categories is een collectie en nooit null
             if (categories == null || categories.Count() == 0)
             {
-                return NotFound(new { message = $"Product {id} not found" });
+                return NotFound(new { message = "Categorie niet gevonden." });
                 //return NotFound();
             }
             Category category = categories.FirstOrDefault<Category>();
@@ -101,32 +102,78 @@ namespace Recipes_DB.Controllers
             return Ok(mapper.Map<CategoryDTO>(category));
         }
 
+
+        // GET: api/Categories/Name/Dessert
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("name/{name}", Name = "GetCategoryByName")]
+        public async Task<ActionResult<CategoryDTO>> GetCategoryByName(string name)
+        {
+            //var category = await _context.Category.FindAsync(id);
+            //Expressie returnt een collectie
+
+            if (name == null)
+            {
+                return BadRequest(new { message = "Ongeldige naam ingevoerd." });
+            }
+
+            var categories = await genericRepo.GetByExpressionAsync(m => m.CategoryName.Contains(name));
+            if (categories == null || categories.Count() == 0)
+            {
+                return NotFound(new { message = "Categorie niet gevonden." });
+                //return NotFound();
+            }
+            Category category = categories.FirstOrDefault<Category>();
+
+            return Ok(mapper.Map<CategoryDTO>(category));
+        }
+
+
         // PUT: api/Categories/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategory(int id, CategoryDTO categoryDTO)
         {
-            if (id != category.Id)
+            //1. altijd null check naast supplementaire Id check
+            if (categoryDTO == null || id != categoryDTO.Id) return BadRequest();
+
+            //2. mapping 
+            var category = mapper.Map<Category>(categoryDTO);
+            if (category == null)
             {
-                return BadRequest();
+                return BadRequest(new { Message = "Onvoldoende data bij de categorie" });
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            //3. validatie
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { Message = $"Geen geldige input. {ModelState}" });
+            }
+
+            // _context.Entry(category).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                  Category categorySearch = (await genericRepo.GetByExpressionAsync(c => c.Id == categoryDTO.Id)).FirstOrDefault();
+
+                await genericRepo.Update(mapper.Map<Category>(categoryDTO),id);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(id))
-                {
+                if (!genericRepo.Exists(category,id).Result)
+                
+                    {
                     return NotFound();
                 }
                 else
                 {
-                    throw;
+                    return RedirectToAction("HandleErrorCode", "Error", new
+                    {
+                        statusCode = 400,
+                        errorMessage = $"De categorie '{category.CategoryName}' werd niet aangepast."
+                    });
                 }
             }
 
@@ -136,15 +183,19 @@ namespace Recipes_DB.Controllers
         // POST: api/Categories
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //alle mogelijke Statuscodes worden zo zichtbaar in Swagger:
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [Produces("application/json")]
         [HttpPost]
-        public async Task<ActionResult<CategoryEditCreateDTO>> PostCategory(
-            [FromBody] [Bind("Id","CategoryName")]        
-            CategoryEditCreateDTO categoryDTO)
+        public async Task<ActionResult<CategoryEditCreateDTO>> PostCategory([FromBody] [Bind("CategoryName")] CategoryEditCreateDTO categoryDTO)
         {
-            if (categoryDTO == null) { 
-                return BadRequest(new { Message = "Geen categorie input" }); 
+            if (categoryDTO == null)
+            {
+                return BadRequest(new { Message = "Geen categorie input" });
             };
-         
+
             var category = mapper.Map<Category>(categoryDTO);
             if (category == null)
             {
@@ -153,7 +204,7 @@ namespace Recipes_DB.Controllers
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { Message = $"Geen geldige input. {ModelState}" });
+                return BadRequest(ModelState);
             }
 
             try
@@ -162,7 +213,7 @@ namespace Recipes_DB.Controllers
                 //await _context.SaveChangesAsync();
                 await genericRepo.Create(category);
 
-                return CreatedAtAction("GetCategory", new { id = category.Id }, mapper.Map<CategoryEditCreateDTO>(category));
+                return CreatedAtAction("GetCategoryById", new { id = category.Id }, mapper.Map<CategoryEditCreateDTO>(category));
             }
             catch (Exception exc)
             {
@@ -179,26 +230,40 @@ namespace Recipes_DB.Controllers
         }
 
 
+
+
         // DELETE: api/Categories/5
         [MapToApiVersion("2.0")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-            var category = await _context.Category.FindAsync(id);
-            if (category == null)
+            var categories = await genericRepo.GetByExpressionAsync(c => c.Id == id) ;
+            if (categories == null || categories.Count() ==0)
             {
-                return NotFound();
+                return NotFound(new { message = "Categorie niet gevonden." });
             }
 
-            _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
+            Category category = categories.FirstOrDefault<Category>();
+            try { 
+                
+                await genericRepo.Delete(category);
+            
+            } catch {
+                //Customised gebruikers error
+                return RedirectToAction("HandleErrorCode", "Error", new
+                {
+                    statusCode = 400,
+                    errorMessage = $"Het verwijderen van categorie '{category.CategoryName}' is mislukt."
+                });
 
-            return category;
+            }
+
+            return Ok(mapper.Map<CategoryDTO>(category));
         }
 
-        private bool CategoryExists(int id)
-        {
-            return _context.Category.Any(e => e.Id == id);
-        }
+        //private bool CategoryExists(int id)
+        //{
+        //    return _context.Category.Any(e => e.Id == id);
+        //}
     }
 }

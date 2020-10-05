@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Recipes_DB.Models;
+using Recipes_DB.Repositories;
 using Serilog;
 
 namespace Recipes_DB
@@ -46,6 +47,9 @@ namespace Recipes_DB
             var connectionString = Configuration.GetConnectionString("Recipes_DB");
 
             services.AddDbContext<Recipes_DB1Context>(options => options.UseSqlServer(connectionString));
+            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+            services.AddScoped <IRecipeRepo,RecipeRepo>();
+
 
             //2b. Cors 
             services.AddCors(options =>
