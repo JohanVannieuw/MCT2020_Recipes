@@ -13,6 +13,8 @@ namespace Recipes_DB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Consumes("application/json", "application/json-path+json", "multipart/form-data", "application/form-data")]
+    [Produces("application/json")]
     public class RecipesController : ControllerBase
     {
         private readonly Recipes_DB1Context _context;
@@ -31,7 +33,7 @@ namespace Recipes_DB.Controllers
 
         // GET: api/Recipes
         /// <summary>
-        /// Haalt gerechten op en cacht voor 30 seconden.
+        /// Haalt gerechten op en cacht zijn response voor 30 seconden.
         /// </summary>
 
         [HttpGet]
@@ -105,7 +107,7 @@ namespace Recipes_DB.Controllers
             //2. RecipeDTO ophalen
             Recipe recipe = recipes.First();
             var recipeDTOToPatch = mapper.Map<RecipeDTO>(recipe); //map naar DTO
-           //TODO: niet voorzien in Mapper (optioneel)
+           //TODO: recipe.Category niet voorzien in Mapper (optioneel)
             recipe.Category = (await categoryRepo.GetByExpressionAsync(c => c.Id == recipe.CategoryId)).First();
             var tempId = recipe.CategoryId; //alleen indien verdwenen door mapping
 
@@ -121,8 +123,8 @@ namespace Recipes_DB.Controllers
             }
             catch (Exception exc)
             {
-                //TODO: exceptie 
-                throw new Exception($"Patchupdate  of {recipe.RecipeName} failed.              {exc.InnerException.Message}");
+                //TODO:Recipe- exceptie moet logger worden + error controller redirect
+                throw new Exception($"Patchupdate  of {recipe.RecipeName} failed. {exc.InnerException.Message}");
                }
 
             return NoContent();
@@ -138,7 +140,6 @@ namespace Recipes_DB.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
             _context.Recipe.Add(recipe);

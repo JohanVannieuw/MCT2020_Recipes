@@ -22,7 +22,7 @@ namespace RecipesDB_UnitTests.Controllers
     public class CategoriesControllerTests : DatabaseTestDB
     {
 
-        private readonly Recipes_DB1Context context;
+        //private readonly Recipes_DB1Context context;
         private DbSet<Category> categoriesList;
         private DbSet<Recipe> recipesList;
         private IMapper mapper; //concrete mapper
@@ -33,7 +33,7 @@ namespace RecipesDB_UnitTests.Controllers
         //  public async Task GetFakeStudents() { . . . . }
         public CategoriesControllerTests()
         {
-            context = Context; //property dependancy
+            //context = Context; //property dependancy
             categoriesList = Context.Category;
             recipesList = Context.Recipe;
 
@@ -191,7 +191,7 @@ namespace RecipesDB_UnitTests.Controllers
             Assert.IsInstanceOfType(createdResult, typeof(CreatedAtActionResult)); //type
             Assert.IsInstanceOfType(createdResult.Value, typeof(CategoryEditCreateDTO));
           Assert.AreEqual(((CategoryEditCreateDTO)createdResult.Value).CategoryName, "een nieuwe categorie"); //data
-            Assert.AreEqual("GetCategory", createdResult.ActionName);
+            Assert.AreEqual("GetCategoryById", createdResult.ActionName);
             Assert.AreEqual(201, createdResult.StatusCode);//statuscode
           }
 

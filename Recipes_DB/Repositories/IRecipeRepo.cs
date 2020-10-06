@@ -7,6 +7,6 @@ namespace Recipes_DB.Repositories
     public interface IRecipeRepo : IGenericRepo<Recipe>
     {
         Task<int> CountRecipes();
-        Task<IEnumerable<Recipe>> GetAllAsync();
+        new Task<IEnumerable<Recipe>> GetAllAsync();
     }
 }

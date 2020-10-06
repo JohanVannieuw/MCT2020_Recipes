@@ -21,6 +21,7 @@ using Microsoft.OpenApi.Models;
 using Recipes_DB.Models;
 using Recipes_DB.Repositories;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Recipes_DB
 {
@@ -47,9 +48,6 @@ namespace Recipes_DB
             var connectionString = Configuration.GetConnectionString("Recipes_DB");
 
             services.AddDbContext<Recipes_DB1Context>(options => options.UseSqlServer(connectionString));
-            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
-            services.AddScoped <IRecipeRepo,RecipeRepo>();
-
 
             //2b. Cors 
             services.AddCors(options =>
@@ -68,13 +66,13 @@ namespace Recipes_DB
             //3. Repos 
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             //services.AddScoped(typeof(IRecipeRepo<>), typeof(RecipeRepo<>));
+            services.AddScoped<IRecipeRepo, RecipeRepo>();
 
             ////4. Mapper 
             services.AddAutoMapper(typeof(Recipes_DBProfiles));
 
-            ////5. Swagger
-            ///
-
+            ////5. Swagger met extra docs in XMLfile (versioning: zie pt 9)
+ 
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             //2. Include de xml file
@@ -82,8 +80,9 @@ namespace Recipes_DB
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "RecipesAPI v1.0", Version = "v1.0" });
-                c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "RecipesAPI latest", Version = "v2.0" });
+                c.SwaggerDoc("v2.0", new OpenApiInfo { Title = "RecipesAPI latest (v2.0)", Version = "v2.0" });
                 c.IncludeXmlComments(xmlPath);
+
             });
 
 
@@ -102,8 +101,7 @@ namespace Recipes_DB
                 options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
             }).AddXmlSerializerFormatters();  //voegt de standard XML formatter toe (v3)
 
-            //8. ratelimiting 
-            //Rate limiting
+            //8. Rate limiting
             //opzetten van MemoryCache om rates te bewaren
             services.AddMemoryCache();
 
@@ -121,13 +119,12 @@ namespace Recipes_DB
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0); //major, minor >> komt in controller
                 options.AssumeDefaultVersionWhenUnspecified = true;
-              //  options.ApiVersionReader = new System.Web.Mvc.QueryStringOrHeaderApiVersionReader("x-api-version");
+                options.ReportApiVersions = true; //worden getoond in de header: api-supported-versions
+               // options.ApiVersionReader = new System.Web.Mvc.QueryStringOrHeaderApiVersionReader("x-api-version");
             });
 
             //10. Caching 
             services.AddResponseCaching();
-
-            //11. Extra docs - Swagger  >> zie hoger 
             
         }
 

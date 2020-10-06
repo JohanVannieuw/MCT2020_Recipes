@@ -17,18 +17,24 @@ using Serilog;
 
 namespace Recipes_DB.Controllers
 {
-    //https://localhost:44390/api/categories?api-version=2.0
+
     [Route("api/[controller]")]
+    //https://localhost:44390/api/categories?api-version=2.0
+
     // https://localhost:44390/api/2.0/categories  via Route:
     //[Route("api/{version:apiVersion}/[controller]")] 
     [ApiController]
     [ApiVersion("1.0")]
+    [Consumes("application/json", "application/json-path+json", "multipart/form-data", "application/form-data")]
+    [Produces("application/json")]
+
+
     public class CategoriesController : ControllerBase
     {
         private readonly IGenericRepo<Category> genericRepo;
         private readonly IRecipeRepo genericRecipeRepo;
         private readonly IMapper mapper;
-        private readonly ILogger<CategoriesController> logger;
+        //private readonly ILogger<CategoriesController> logger;
         private readonly IMemoryCache memoryCache;
 
         public CategoriesController(IGenericRepo<Category> genericRepo, IRecipeRepo genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache)
@@ -37,12 +43,16 @@ namespace Recipes_DB.Controllers
             this.genericRepo = genericRepo;
             this.genericRecipeRepo = genericRecipeRepo;
             this.mapper = mapper;
-            this.logger = logger;
+            //this.logger = logger;
             this.memoryCache = memoryCache;
         }
 
         // GET: api/Categories
+        /// <summary>
+        /// Haalt gerechten op en cacht in het geheugen voor 1 minuut.
+        /// </summary>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetCategories()
         {
 
@@ -82,8 +92,8 @@ namespace Recipes_DB.Controllers
         // GET: api/Categories/5
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(Category), (int)HttpStatusCode.OK)]
-        [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(CategoryDTO), (int)HttpStatusCode.OK)]
+          [HttpGet("{id:int}")]
         public async Task<ActionResult<CategoryDTO>> GetCategoryById(int id)
         {
             var categories = await genericRepo.GetByExpressionAsync(m => m.Id == id);
@@ -105,7 +115,7 @@ namespace Recipes_DB.Controllers
 
         // GET: api/Categories/Name/Dessert
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(Category), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CategoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("name/{name}", Name = "GetCategoryByName")]
         public async Task<ActionResult<CategoryDTO>> GetCategoryByName(string name)
@@ -133,6 +143,8 @@ namespace Recipes_DB.Controllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, CategoryDTO categoryDTO)
         {
@@ -187,7 +199,6 @@ namespace Recipes_DB.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        [Produces("application/json")]
         [HttpPost]
         public async Task<ActionResult<CategoryEditCreateDTO>> PostCategory([FromBody] [Bind("CategoryName")] CategoryEditCreateDTO categoryDTO)
         {
@@ -212,7 +223,6 @@ namespace Recipes_DB.Controllers
                 //_context.Category.Add(category); 
                 //await _context.SaveChangesAsync();
                 await genericRepo.Create(category);
-
                 return CreatedAtAction("GetCategoryById", new { id = category.Id }, mapper.Map<CategoryEditCreateDTO>(category));
             }
             catch (Exception exc)
@@ -229,13 +239,14 @@ namespace Recipes_DB.Controllers
             }
         }
 
-
-
-
         // DELETE: api/Categories/5
-        [MapToApiVersion("2.0")]
+        /// <summary>
+        /// Verwijderen van een categorie kan enkel vanaf versie 2.0 :
+        /// /api/categories/5?api-version=2.0
+        /// </summary>
+        [MapToApiVersion("2.0")]  
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteCategory(int id)
+        public async Task<ActionResult<CategoryDTO>> DeleteCategory(int id)
         {
             var categories = await genericRepo.GetByExpressionAsync(c => c.Id == id) ;
             if (categories == null || categories.Count() ==0)
