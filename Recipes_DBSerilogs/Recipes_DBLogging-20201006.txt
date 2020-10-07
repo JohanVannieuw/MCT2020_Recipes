@@ -10,3 +10,5 @@
 2020-10-06 09:29:39.704 +02:00 [Warning] 0000 Serilog Warning test.
 2020-10-06 09:31:23.397 +02:00 [Warning] 0000 Serilog Warning test.
 2020-10-06 09:36:46.812 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-06 10:36:40.645 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-06 10:47:11.191 +02:00 [Warning] 0000 Serilog Warning test.

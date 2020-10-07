@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes_DB", "Recipes_DB\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipesDB_UnitTests", "RecipesDB_UnitTests\RecipesDB_UnitTests.csproj", "{39ECC93E-9D07-4D2E-88BC-F45BA6E113F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipes.IntegrationTests", "Recipes.IntegrationTests\Recipes.IntegrationTests.csproj", "{1AD044D2-F0A1-4760-B3C6-59F0F51A696A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{39ECC93E-9D07-4D2E-88BC-F45BA6E113F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39ECC93E-9D07-4D2E-88BC-F45BA6E113F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39ECC93E-9D07-4D2E-88BC-F45BA6E113F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AD044D2-F0A1-4760-B3C6-59F0F51A696A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AD044D2-F0A1-4760-B3C6-59F0F51A696A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AD044D2-F0A1-4760-B3C6-59F0F51A696A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AD044D2-F0A1-4760-B3C6-59F0F51A696A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

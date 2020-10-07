@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="3.1.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="3.1.8" />
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.8" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
 		<PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
 		<PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
@@ -19,7 +23,6 @@
 
 	<ItemGroup>
 		<Folder Include="Services\" />
-		<Folder Include="Repositories\" />
 	</ItemGroup>
 
 	<ItemGroup>
