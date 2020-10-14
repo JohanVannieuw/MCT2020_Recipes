@@ -1,0 +1,46 @@
+{
+  "Routes": [
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 19402 //http poort (only) van de cartservice
+        }
+      ],
+      "DownstreamPathTemplate": "/api/carts",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/carts",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44390 //https poort van de service
+        }
+      ],
+      "DownstreamPathTemplate": "/swagger/{page}",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/swagger/{page}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44390 //https poort van de service
+        }
+      ],
+      "DownstreamPathTemplate": "/api/{allServices}",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/{allServices}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "BaseUrl": null,
+    "https": 44338 //https poort van de gateway
+  }
+}
+
