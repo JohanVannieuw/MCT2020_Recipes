@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartServices", "CartService
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\APIGateway.csproj", "{0B15BD93-02B9-47D8-8A1C-D3D7926FBA50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServices_std", "IdentityServices\IdentityServices_std.csproj", "{36430D4D-9914-4CCE-B535-451C99EE0012}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServices", "IdentityServices\IdentityServices.csproj", "{64F90029-6F71-4A17-A058-2293465798AF}"
 EndProject
 Global
@@ -43,10 +41,6 @@ Global
 		{0B15BD93-02B9-47D8-8A1C-D3D7926FBA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B15BD93-02B9-47D8-8A1C-D3D7926FBA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B15BD93-02B9-47D8-8A1C-D3D7926FBA50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{36430D4D-9914-4CCE-B535-451C99EE0012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36430D4D-9914-4CCE-B535-451C99EE0012}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36430D4D-9914-4CCE-B535-451C99EE0012}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36430D4D-9914-4CCE-B535-451C99EE0012}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64F90029-6F71-4A17-A058-2293465798AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64F90029-6F71-4A17-A058-2293465798AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64F90029-6F71-4A17-A058-2293465798AF}.Release|Any CPU.ActiveCfg = Release|Any CPU

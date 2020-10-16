@@ -28,7 +28,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44390 //https poort van de service
+          "Port": 44390 //https poort van de recipes_db service
         }
       ],
       "DownstreamPathTemplate": "/api/{allServices}",
@@ -40,7 +40,7 @@
   "GlobalConfiguration": {
     "RequestIdKey": "OcRequestId",
     "BaseUrl": null,
-    "https": 44338 //https poort van de gateway
+    "http": 10568 //https poort van de gateway
   }
 }
 

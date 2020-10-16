@@ -45,7 +45,7 @@ namespace APIGateway
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync(
-                        "<div>Hello World van de Ocelot gateway op poort 5000/5001 !</div>" +
+                        "<div>Hello World van de Ocelot gateway op poort 10568 !</div>" +
                         "<ul>" +
                         "<li><a href='/categories'>Lijst van categori&euml;n-API </a></li>" +
                         "<li><a href='/recipes'>Lijst van gerechten-API </a></li>" +

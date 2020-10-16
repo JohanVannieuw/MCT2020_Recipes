@@ -1,0 +1,7 @@
+2020-10-16 08:55:51.005 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-16 09:11:42.516 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-16 09:13:00.522 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-16 09:33:29.522 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-16 09:35:38.653 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-16 10:13:37.610 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-16 10:21:57.595 +02:00 [Warning] 0000 Serilog Warning test.

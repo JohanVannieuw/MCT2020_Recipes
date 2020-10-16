@@ -10,7 +10,7 @@ namespace IdentityServices.Models
     public class User:IdentityUser
     {
 
-        [Required]
+        //[Required]
         public string CardNumber { get; set; }
 
         // Niet <IdentityUserRole> !

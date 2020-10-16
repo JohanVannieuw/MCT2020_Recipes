@@ -35,8 +35,12 @@ namespace IdentityServices
             
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddIdentity<User, Role>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            //// overbrengen naar IdentiyHostStartup.cs
+            //services.AddIdentity<User, Role>(
+            //    options => options.SignIn.RequireConfirmedAccount = false 
+            //    )
+            //.AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
