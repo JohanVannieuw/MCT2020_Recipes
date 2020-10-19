@@ -1,0 +1,17 @@
+2020-10-19 11:45:14.822 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 11:46:32.222 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 14:22:22.300 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 15:18:11.624 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 16:00:57.008 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 16:05:36.801 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 16:35:02.499 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 16:43:17.003 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 16:49:02.482 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 16:56:25.804 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 18:13:42.289 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 18:18:59.054 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 18:25:15.086 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 18:36:16.970 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 18:37:53.405 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 18:54:55.981 +02:00 [Warning] 0000 Serilog Warning test.
+2020-10-19 18:57:21.677 +02:00 [Warning] 0000 Serilog Warning test.

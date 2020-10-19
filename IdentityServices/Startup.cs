@@ -47,7 +47,7 @@ namespace IdentityServices
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env , IServiceProvider serviceProvider, ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -67,6 +67,14 @@ namespace IdentityServices
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //role en usermanager in de pipeline
+            RoleManager<Role> roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
+            UserManager<User> userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+            (ApplicationDbContextSeed.SeedAsync(context, env, roleManager,userManager)).Wait();
+
+
 
             app.UseEndpoints(endpoints =>
             {

@@ -15,6 +15,9 @@ using CartServices.Repositories;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace CartServices
 {
@@ -64,6 +67,29 @@ namespace CartServices
                 });
             });
 
+            //3. authenticatie via Ocelot
+            services.AddAuthentication(svc =>
+            {
+                svc.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                svc.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer("Bearer",
+             options =>
+             {
+                 options.RequireHttpsMetadata = false;
+                 //options.Audience = //Configuration.GetSection("Tokens:Audience").Value;
+                 //options.ClaimsIssuer = Configuration.GetSection("Tokens:Issuer").Value;
+                 options.TokenValidationParameters = new TokenValidationParameters()
+                 {
+                     ValidateIssuer = true,
+                     ValidateAudience = true,
+                     ValidateLifetime = true,
+                     ValidateIssuerSigningKey = true,
+                     ValidIssuer = Configuration["Tokens:Issuer"],
+                     ValidAudience = Configuration["Tokens:Audience"],
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                 };
+                 options.SaveToken = true;
+             });
 
         }
 
@@ -85,6 +111,8 @@ namespace CartServices
 
             app.UseRouting();
 
+            //vóór de endpoints.
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

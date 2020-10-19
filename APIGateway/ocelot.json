@@ -10,8 +10,26 @@
       "DownstreamPathTemplate": "/api/carts",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/carts",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "RecipesAPIKey",
+        "AllowedScopes": []
+      }
+
     },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44361 //https poort van de service
+        }
+      ],
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/auth/login",
+      "UpstreamHttpMethod": [ "POST"]
+    },
+
     {
       "DownstreamHostAndPorts": [
         {

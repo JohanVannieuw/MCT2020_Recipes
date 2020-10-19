@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CartServices.Data;
 using CartServices.Models;
 using CartServices.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CartServices.Controllers
 {
@@ -27,6 +28,7 @@ namespace CartServices.Controllers
 
         }
 
+        [Authorize]
         [HttpGet(Name="GetCart")]
         public async Task<IActionResult> GetCart([FromQuery(Name = "u")] Guid userId){
             //TODO: TESTUSERID overbrengen naar unittest
@@ -79,6 +81,7 @@ namespace CartServices.Controllers
         }
 
         // DELETE: api/Carts/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         public IActionResult Delete([FromQuery(Name = "u")] Guid userId, [FromQuery(Name = "ci")] Guid cartItemId)
         {
