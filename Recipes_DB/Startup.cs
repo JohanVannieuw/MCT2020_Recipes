@@ -45,7 +45,7 @@ namespace Recipes_DB
             services.AddControllers();
 
             //2. Context 
-            var connectionString = Configuration.GetConnectionString("Recipes_DB");
+            var connectionString = Configuration.GetConnectionString("Recipes_DBc");
 
             services.AddDbContext<Recipes_DB1Context>(options => options.UseSqlServer(connectionString));
 
@@ -158,7 +158,7 @@ namespace Recipes_DB
                 c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "Recipes_DB latest");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

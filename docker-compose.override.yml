@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  recipes_db:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "32808:80"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "32809:80"
+

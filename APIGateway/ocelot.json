@@ -33,32 +33,32 @@
     {
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 44390 //https poort van de service
+          "Host": "recipes_db",
+          "Port":80 
         }
       ],
       "DownstreamPathTemplate": "/swagger/{page}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/swagger/{page}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
     },
     {
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 44390 //https poort van de recipes_db service
+          "Host": "recipes_db", //naam van de service
+          "Port": 80 //externe http(only) DOCKER poort van de recipes_db service
         }
       ],
       "DownstreamPathTemplate": "/api/{allServices}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/{allServices}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ,"PATCH"]
     }
   ],
   "GlobalConfiguration": {
     "RequestIdKey": "OcRequestId",
-    "BaseUrl": null,
-    "http": 10568 //https poort van de gateway
+    "BaseUrl": "http://localhost:32809"
+    //"http": 10568 //eerdere http poort van de gateway
   }
 }
 

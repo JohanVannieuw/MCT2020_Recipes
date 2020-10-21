@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipes.IntegrationTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartServices", "CartServices\CartServices.csproj", "{E003F62F-4FBE-442B-9D29-EE2FC01366DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\APIGateway.csproj", "{0B15BD93-02B9-47D8-8A1C-D3D7926FBA50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\APIGateway.csproj", "{0B15BD93-02B9-47D8-8A1C-D3D7926FBA50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServices", "IdentityServices\IdentityServices.csproj", "{64F90029-6F71-4A17-A058-2293465798AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServices", "IdentityServices\IdentityServices.csproj", "{64F90029-6F71-4A17-A058-2293465798AF}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{98EE6465-219D-4E22-98D4-1E55752C3BB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{64F90029-6F71-4A17-A058-2293465798AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64F90029-6F71-4A17-A058-2293465798AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64F90029-6F71-4A17-A058-2293465798AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EE6465-219D-4E22-98D4-1E55752C3BB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EE6465-219D-4E22-98D4-1E55752C3BB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EE6465-219D-4E22-98D4-1E55752C3BB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EE6465-219D-4E22-98D4-1E55752C3BB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

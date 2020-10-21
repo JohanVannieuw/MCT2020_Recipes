@@ -11,6 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "recipes",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -21,7 +22,14 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+      "applicationUrl": "https://localhost:7000;http://localhost:7001"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true,
+      "useSSL": false
     }
   }
 }

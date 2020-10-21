@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -69,21 +71,37 @@ namespace APIGateway
                 app.UseDeveloperExceptionPage();
             }
 
+            var currentUrl = "";
+            app.Use((context, next) =>
+            {
+                currentUrl = context.Request.GetDisplayUrl();
+                return next.Invoke();
+            });
+
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
+
+
                 {
-                    await context.Response.WriteAsync(
-                        "<div>Hello World van de Ocelot gateway op poort 10568 !</div>" +
-                        "<ul>" +
-                        "<li><a href='/categories'>Lijst van categori&euml;n-API </a></li>" +
-                        "<li><a href='/recipes'>Lijst van gerechten-API </a></li>" +
-                        "<li><a href='/carts'>Shopping cart-API van onze testuser.</a></li>" +
-                        "</ul>")
-                    ;
-                });
+                    endpoints.MapGet("/", async context =>
+                    {
+                        if (env.IsDevelopment())
+                        {
+                            await context.Response.WriteAsync(
+                                    $"<div>Hello World van (Docker en)  Ocelot gateway op {currentUrl} !</div>" +
+                                    "<ul>" +
+                                    "<li><a href='/categories'>Lijst van categori&euml;n-API </a></li>" +
+                                    "<li><a href='/recipes'>Lijst van gerechten-API </a></li>" +
+                                    "<li><a href='/carts'>Shopping cart-API van onze testuser.(Beveiligd &#x1F61C; )</a></li>" +
+                                    "</ul>") 
+                                ;
+                        };
+                    });
+
+                }
             });
 
             await app.UseOcelot();
