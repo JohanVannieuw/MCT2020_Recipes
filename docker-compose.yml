@@ -16,9 +16,33 @@ services:
     ports: ["1533:1433"]
     volumes:
       ["${APPDATA}/DockerVolumes/sqlserver:/var/opt/mssql/data"]
+ 
   apigateway:
     image: ${DOCKER_REGISTRY-}apigateway
     build:
       context: .
       dockerfile: APIGateway/Dockerfile
+
+
+  cartservices:
+    image: ${DOCKER_REGISTRY-}cartservices
+    build:
+      context: .
+      dockerfile: CartServices/Dockerfile
+    depends_on:
+        - db
+
+  identityservices:
+    image: ${DOCKER_REGISTRY-}identityservices
+    build:
+      context: .
+      dockerfile: IdentityServices/Dockerfile
+    depends_on:
+        - db
+
+  orderservices:
+    image: ${DOCKER_REGISTRY-}orderservices
+    build:
+      context: .
+      dockerfile: OrderServices/Dockerfile
 

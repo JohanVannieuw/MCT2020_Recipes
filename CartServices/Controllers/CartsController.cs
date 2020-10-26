@@ -9,6 +9,7 @@ using CartServices.Data;
 using CartServices.Models;
 using CartServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using CartServices.Messaging;
 
 namespace CartServices.Controllers
 {
@@ -19,16 +20,17 @@ namespace CartServices.Controllers
     public class CartsController : ControllerBase
     {
              private readonly ICartRepo cartRepo;
+        private readonly ICartSender cartSender;
         private readonly Guid TESTUSERID = ModelBuilderExtensions.TESTUSERID ; //enkel in development
 
-        public CartsController(CartServicesContext context, ICartRepo cartItemRepo)
+        public CartsController(CartServicesContext context, ICartRepo cartItemRepo, ICartSender cartSender)
         {
 
             this.cartRepo = cartItemRepo;
-
+            this.cartSender = cartSender;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet(Name="GetCart")]
         public async Task<IActionResult> GetCart([FromQuery(Name = "u")] Guid userId){
             //TODO: TESTUSERID overbrengen naar unittest
@@ -80,6 +82,26 @@ namespace CartServices.Controllers
             return Created("GetCard",cartItemResult);
         }
 
+        ////// POST: api/carts/publish
+        [HttpPost("publish/")]
+        public async Task<ActionResult<Cart>> PublishCart([FromBody] Cart cart)
+        {
+            try
+            {
+                if (cart.CartItems.Count() == 0)
+                {
+                    return BadRequest($"Je moet minstens één item bestellen in je shoppingcart {cart.Id}");
+                }
+
+                cartSender.SendCart(cart);
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                var innerexc = "  " + ex.InnerException.InnerException.Message;
+                return BadRequest(ex.Message + innerexc);
+            }
+        }
         // DELETE: api/Carts/5
         [Authorize(Roles = "Admin")]
         [HttpDelete]

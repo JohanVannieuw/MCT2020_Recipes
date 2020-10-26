@@ -1,22 +1,94 @@
 {
   "Routes": [
+    //recipes services (gn all) ------------------------------
     {
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 19402 //http poort (only) van de cartservice
+          "Host": "recipes_db",
+          "Port": 80 // was https poort van de recipes_db service (was44390) en nu container poort
+        }
+      ],
+      "DownstreamPathTemplate": "/api/recipes",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/recipes",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "recipes_db",
+          "Port": 80 // was https poort van de recipes_db service (was44390) en nu container poort
+        }
+      ],
+      "DownstreamPathTemplate": "/api/recipes/{params}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/recipes/{params}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+    },
+    //categories services --------------------------------------------------
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "recipes_db",
+          "Port": 80 // was https poort van de recipes_db service (was44390) en nu container poort
+        }
+      ],
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "recipes_db",
+          "Port": 80 // was https poort van de recipes_db service (was44390) en nu container poort
+        }
+      ],
+      "DownstreamPathTemplate": "/api/categories/{params}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/categories/{params}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+    },
+
+    //carts -----------------------------------------------------------------------
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartservices",
+          "Port": 80 //http 19402 poort (only) van de cartservice
         }
       ],
       "DownstreamPathTemplate": "/api/carts",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/carts",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "RecipesAPIKey",
-        "AllowedScopes": []
-      }
-
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      //,
+      //"AuthenticationOptions": {
+      //  "AuthenticationProviderKey": "RecipesAPIKey",
+      //  "AllowedScopes": []
+      //}
     },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartservices",
+          "Port": 80 //http 19402 poort (only) van de cartservice
+        }
+      ],
+      "DownstreamPathTemplate": "/api/carts/{action}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/carts/{action}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      //,
+      //"AuthenticationOptions": {
+      //  "AuthenticationProviderKey": "RecipesAPIKey",
+      //  "AllowedScopes": []
+      //}
+    },
+
+
+    //identity services ------------------------------------
     {
       "DownstreamHostAndPorts": [
         {
@@ -27,32 +99,19 @@
       "DownstreamPathTemplate": "/api/auth/login",
       "DownstreamScheme": "https",
       "UpstreamPathTemplate": "/auth/login",
-      "UpstreamHttpMethod": [ "POST"]
+      "UpstreamHttpMethod": [ "POST" ]
     },
-
     {
       "DownstreamHostAndPorts": [
         {
           "Host": "recipes_db",
-          "Port":80 
-        }
-      ],
-      "DownstreamPathTemplate": "/swagger/{page}",
-      "DownstreamScheme": "http",
-      "UpstreamPathTemplate": "/swagger/{page}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
-    },
-    {
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "recipes_db", //naam van de service
-          "Port": 80 //externe http(only) DOCKER poort van de recipes_db service
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/{allServices}",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/{allServices}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ,"PATCH"]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
     }
   ],
   "GlobalConfiguration": {

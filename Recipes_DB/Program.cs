@@ -27,7 +27,7 @@ namespace Recipes_DB
                     var context = services.GetRequiredService<Recipes_DB1Context>();
                     //context.Database.EnsureDeleted();//verwijder (-> niet doen in productie)
                     context.Database.EnsureCreated(); //maakt db aan,indien onbestaand,volgens modellen
-                  // context.Database.Migrate();//maakt db aan, indien onbestaand en voert migraties uit
+                  context.Database.Migrate();//maakt db aan, indien onbestaand en voert migraties uit
 
                     //context kan je via property dependancy doorgeven indien nodig
                 }

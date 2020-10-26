@@ -18,6 +18,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CartServices.Messaging;
 
 namespace CartServices
 {
@@ -37,10 +38,13 @@ namespace CartServices
 
             //1. context en repo's 
             services.AddDbContext<CartServicesContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("CartServicesContext")), ServiceLifetime.Scoped);
+                    options.UseSqlServer(Configuration.GetConnectionString("CartServicesContextc")), ServiceLifetime.Scoped);
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<ICartRepo, CartRepo>();
+
+
           
+
             //2. looping
             services.AddControllers()
                .AddNewtonsoftJson(options =>
@@ -90,6 +94,10 @@ namespace CartServices
                  };
                  options.SaveToken = true;
              });
+
+            //4. RABBITMQ
+            services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMq"));
+            services.AddScoped<ICartSender, CartSender>();
 
         }
 
