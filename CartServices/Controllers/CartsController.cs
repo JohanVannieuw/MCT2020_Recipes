@@ -10,6 +10,9 @@ using CartServices.Models;
 using CartServices.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using CartServices.Messaging;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.AspNetCore.Identity;
 
 namespace CartServices.Controllers
 {
@@ -34,10 +37,31 @@ namespace CartServices.Controllers
         [HttpGet(Name="GetCart")]
         public async Task<IActionResult> GetCart([FromQuery(Name = "u")] Guid userId){
             //TODO: TESTUSERID overbrengen naar unittest
-            userId = TESTUSERID;  //test value enkel in development 
+            // userId = TESTUSERID;  //test value enkel in development 
+
+            ///IdentityServices plaatst data in this.User.Claims (IEnumerable<Claim>)
+            //reden:UserManager kan maar vraagt (zeker bij customising) ontdubbeling
+            IList<Claim> lstClaims = this.User.Claims.Cast<Claim>().ToList();
             if (userId == null || userId == Guid.Empty)
-            {                
-                return BadRequest(new { Message = $"User {userId} niet ingevuld." });
+            {    
+                string userName = this.User.Claims.ElementAt(0).Value;
+                userName = lstClaims[0].Value;
+                string extraKey = lstClaims.ElementAt(2).Value;               
+                Claim extraClaimObj = this.User.Claims.Where(c => c.Type == "myExtraKey").FirstOrDefault();
+                var thisUserId = User.FindFirst(ClaimTypes.NameIdentifier);
+                var thisUserEmail = User.FindFirst(ClaimTypes.Email);
+
+                string role = lstClaims[3].Value;
+                userId = Guid.Parse(lstClaims[3].Value);
+            }
+            else
+            {
+                var thisUserId = Guid.Parse(lstClaims[3].Value); ;
+                
+                if (userId != thisUserId)
+                {
+                    return BadRequest(new { Message = $"User {userId} niet correct." });
+                }
             }
 
             var cartItems = await cartRepo.GetCartItems(userId); //async!

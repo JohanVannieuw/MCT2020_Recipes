@@ -71,6 +71,8 @@ public class JWTServices<TEntity> where TEntity : IdentityUser
             await userManager.RemoveClaimsAsync(user, userClaims);
 
             await userManager.AddClaimAsync(user, new Claim("myExtraKey", "myExtraValue"));
+            await userManager.AddClaimAsync(user, new Claim("thisUserId", user.Id));
+
             //combined string van roles kan niet => ClaimTypes.Role
             foreach (var role in roles)
             {

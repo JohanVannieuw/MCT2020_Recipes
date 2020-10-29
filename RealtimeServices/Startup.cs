@@ -33,6 +33,11 @@ namespace RealtimeServices
 
             //signalR
             services.AddSignalR();
+            services.AddControllers(options =>
+            {
+                options.RespectBrowserAcceptHeader = true; // false by default
+            });
+
 
         }
 
@@ -51,6 +56,7 @@ namespace RealtimeServices
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapControllers();
                 //endpoints.MapGet("/", async context =>
                 //            {
                 //                await context.Response.WriteAsync("Hello from website !");

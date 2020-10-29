@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CartServices.Messaging;
+using CartServices.Models;
 
 namespace CartServices
 {
@@ -41,9 +42,6 @@ namespace CartServices
                     options.UseSqlServer(Configuration.GetConnectionString("CartServicesContextc")), ServiceLifetime.Scoped);
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<ICartRepo, CartRepo>();
-
-
-          
 
             //2. looping
             services.AddControllers()

@@ -8,12 +8,20 @@
     <div>
         <label for="messageInput">Message:</label>
         <input type="text" id="messageInput" />
-        <input type="button" id="sendButton" value="Send Message" />
+        <button id="sendButton"> Send Message </button>
     </div>
     <div>
         <ul id="messagesList"></ul>
     </div>
+    <div>
+        <label for="selectImg">Select your image(s):</label>
+        <input type="file" id="selectImg" name="selectImg" multiple title="Select your image(s)" />
+    </div>
+    <div id="notification">&nbsp;</div>
+
+
     <script src="lib/signalr/dist/browser/signalr.js"></script>
-    <script type="module"  src="/js/chat.js"></script>
+    <script type="module" src="/js/chat.js"></script>
+    <script type="module" src="/js/categoriesHub.js"></script>
 </body>
 </html>

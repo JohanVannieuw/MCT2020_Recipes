@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Recipes_DB.Hubs;
 using Recipes_DB.Models;
 using Recipes_DB.Repositories;
 using Serilog;
@@ -72,11 +73,11 @@ namespace Recipes_DB
             services.AddAutoMapper(typeof(Recipes_DBProfiles));
 
             ////5. Swagger met extra docs in XMLfile (versioning: zie pt 9)
- 
+
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             //2. Include de xml file
-       
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "RecipesAPI v1.0", Version = "v1.0" });
@@ -87,10 +88,10 @@ namespace Recipes_DB
 
 
             ////6. Serilog
-          Log.Logger = new LoggerConfiguration()
-      .MinimumLevel.Warning()
-      .WriteTo.RollingFile(hostingEnvironment.ContentRootPath + "Serilogs/Recipes_DBLogging-{Date}.txt")
-      .CreateLogger();
+            Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Warning()
+        .WriteTo.RollingFile(hostingEnvironment.ContentRootPath + "Serilogs/Recipes_DBLogging-{Date}.txt")
+        .CreateLogger();
 
             //7. XML formatter
             services.AddControllers(options =>
@@ -120,12 +121,28 @@ namespace Recipes_DB
                 options.DefaultApiVersion = new ApiVersion(1, 0); //major, minor >> komt in controller
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true; //worden getoond in de header: api-supported-versions
-               // options.ApiVersionReader = new System.Web.Mvc.QueryStringOrHeaderApiVersionReader("x-api-version");
+                                                  // options.ApiVersionReader = new System.Web.Mvc.QueryStringOrHeaderApiVersionReader("x-api-version");
             });
 
             //10. Caching 
             services.AddResponseCaching();
-            
+
+            //11. Realtime RepoHub (INCLUSIEF CORS!)
+            services.AddScoped<RepoHub>();
+            services.AddSignalR();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyAllowOrigins", builder =>
+                {
+                    builder.AllowAnyMethod()
+                   .AllowAnyHeader()
+                   //.AllowAnyOrigin();
+                   .WithOrigins("https://localhost:44386", "http://localhost:29507", "http://localhost:32809", "http://localhost:32808", "http://localhost:10568", "http://localhost:80")
+                   .AllowCredentials(); //.MUST voor SignalR!
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -159,7 +176,7 @@ namespace Recipes_DB
             });
 
             //app.UseHttpsRedirection();
-
+            app.UseCors("MyAllowOrigins");
             app.UseRouting();
 
             app.UseAuthorization();
@@ -167,6 +184,7 @@ namespace Recipes_DB
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<RepoHub>("/repohub");
             });
         }
     }

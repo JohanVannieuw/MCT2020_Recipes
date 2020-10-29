@@ -63,11 +63,11 @@
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/carts",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
-      //,
-      //"AuthenticationOptions": {
-      //  "AuthenticationProviderKey": "RecipesAPIKey",
-      //  "AllowedScopes": []
-      //}
+      ,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "RecipesAPIKey",
+        "AllowedScopes": []
+      }
     },
     {
       "DownstreamHostAndPorts": [
@@ -101,6 +101,8 @@
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": [ "POST" ]
     },
+
+    //general -----------------------------------
     {
       "DownstreamHostAndPorts": [
         {

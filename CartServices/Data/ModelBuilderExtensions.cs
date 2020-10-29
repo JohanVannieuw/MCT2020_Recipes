@@ -12,7 +12,10 @@ namespace CartServices.Data
 
         public static Microsoft.AspNetCore.Hosting.IWebHostEnvironment env { get; set; }
 
-        public static Guid TESTUSERID = Guid.Parse("3fa85f64-5717-4562-b3fc-2c9631234567");
+      //"3fa85f64-5717-4562-b3fc-2c9631234567"
+        public static Guid TESTUSERID = Guid.Parse("4c69c61b-8ea5-40d2-91df-6c7a8ec29b3b");
+
+
         public static CartServicesContext _context { get; set; }
 
         public static void Seed(this ModelBuilder modelBuilder)

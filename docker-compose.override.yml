@@ -24,15 +24,15 @@ services:
     ports:
       - "32827:80"
 
-  identityservices:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
-    ports:
-      - "33000:80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  #identityservices:
+  #  environment:
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #    - ASPNETCORE_URLS=http://+:80
+  #  ports:
+  #    - "33000:80"
+  #  volumes:
+  #    - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #    - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   orderservices:
     environment:

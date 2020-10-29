@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Recipes_DB.Helpers;
+using Recipes_DB.Hubs;
 using Recipes_DB.Models;
 using Recipes_DB.Repositories;
 using Serilog;
@@ -34,22 +37,25 @@ namespace Recipes_DB.Controllers
         private readonly IGenericRepo<Category> genericRepo;
         private readonly IRecipeRepo genericRecipeRepo;
         private readonly IMapper mapper;
-        //private readonly ILogger<CategoriesController> logger;
+        private readonly ILogger<CategoriesController> logger;
         private readonly IMemoryCache memoryCache;
+        private readonly IHubContext<RepoHub> hubContext;
 
-        public CategoriesController(IGenericRepo<Category> genericRepo, IRecipeRepo genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache)
+        public CategoriesController(IGenericRepo<Category> genericRepo, IRecipeRepo genericRecipeRepo, IMapper mapper, ILogger<CategoriesController> logger, IMemoryCache memoryCache, IHubContext<RepoHub> hubContext)
         {
             // _context = context;  //hier geen context meer bij een repo pattern.
             this.genericRepo = genericRepo;
             this.genericRecipeRepo = genericRecipeRepo;
             this.mapper = mapper;
-            //this.logger = logger;
+            this.logger = logger;
             this.memoryCache = memoryCache;
+            this.hubContext = hubContext;
         }
 
         // GET: api/Categories
         /// <summary>
         /// Haalt gerechten op en cacht in het geheugen voor 1 minuut.
+        /// Demo: Stuurt een notificatie uit naar Hub bij GET Categories.
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<CategoryDTO>), StatusCodes.Status200OK)]
@@ -84,7 +90,12 @@ namespace Recipes_DB.Controllers
                 categoriesCached = (ICollection<Category>)memoryCache.Get(CacheKeys.CategoriesCacheKey);
             }
 
+            //3. mappen naar DTO
             var categoriesDTO = mapper.Map<IEnumerable<CategoryDTO>>(categoriesCached);
+
+            //4. Notificatie met geserialiseerde categoriesDTO naar een Hub sturen (registreren) 
+            await hubContext.Clients.All.SendAsync("ServerMessage", new { message = $"{JsonSerializer.Serialize(categoriesDTO)}" });
+            //alternatief: methode in RepoHub oproepen
 
             return Ok(categoriesDTO);
         }
