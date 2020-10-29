@@ -58,6 +58,21 @@ namespace APIGateway
                   };
                   options.SaveToken = true;
               });
+
+            //Cors noodzakelijk voor front website
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyAllowOrigins", builder =>
+                {
+                    builder.AllowAnyMethod()
+                   .AllowAnyHeader()
+                   //.AllowAnyOrigin()
+                   .WithOrigins("http://localhost:29507", "http://localhost:32809", "http://localhost:10568", "http://localhost:80") //naar appSettings…
+                   .AllowCredentials(); //.MUST!
+                });
+            });
+
+
         }
 
 
@@ -70,6 +85,9 @@ namespace APIGateway
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //front toelaten
+            app.UseCors("MyAllowOrigins");
 
             var currentUrl = "";
             app.Use((context, next) =>
@@ -103,7 +121,7 @@ namespace APIGateway
 
                 }
             });
-
+            app.UseWebSockets(); //vóór UseOcelot
             await app.UseOcelot();
 
         }

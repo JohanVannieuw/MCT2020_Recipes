@@ -12,7 +12,11 @@ hub.recipesDB = (() => {
 
     //1. Initialisatie vd connectie ------------------------------------------------------
     let remoteHost = config.realTime.scheme + "://" + config.realTime.host + ":" + config.realTime.externalPortRecipes;
-    let connection = new signalR.HubConnectionBuilder().withUrl(remoteHost + "/repohub").build();
+    let connection = new signalR.HubConnectionBuilder()
+        .withUrl(remoteHost + "/repohub")
+        .configureLogging(signalR.LogLevel.Error)
+        //.withAutomaticReconnect()
+        .build();
 
     //nodig indien niet in de connection state
     connection.start().catch(function (err) {

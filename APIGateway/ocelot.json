@@ -62,8 +62,7 @@
       "DownstreamPathTemplate": "/api/carts",
       "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/carts",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
-      ,
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "RecipesAPIKey",
         "AllowedScopes": []
@@ -101,8 +100,45 @@
       "UpstreamPathTemplate": "/auth/login",
       "UpstreamHttpMethod": [ "POST" ]
     },
-
-    //general -----------------------------------
+    //realtime services (websockets) -------------------
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "recipes_db",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/repohub",
+      "DownstreamScheme": "ws",
+      "UpstreamPathTemplate": "/repohub",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+    },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "realtimeservices",
+          "Port": 80 //http negotiatie
+        }
+      ],
+      "DownstreamPathTemplate": "/{catchAllHubs}",
+      "DownstreamScheme": "ws",
+      "UpstreamPathTemplate": "/{catchAllHubs}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+    },
+    {
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "realtimeservices",
+          "Port": 80 //controller ()
+        }
+      ],
+      "DownstreamPathTemplate": "/api/fileupload/{args}",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/api/fileupload/{args}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+    },
+    // ,
+    ////general -----------------------------------
     {
       "DownstreamHostAndPorts": [
         {

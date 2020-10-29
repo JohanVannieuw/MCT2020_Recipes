@@ -7,11 +7,13 @@ let realtime = {}; //namespace
 
 realtime.hub = (() => {
     let remoteHost = config.realTime.scheme + "://" + config.realTime.host + ":" + config.realTime.port;
-   // remoteHost = "http://localhost:26133";  //naar config.js
+    // remoteHost = "http://localhost:26133";  //naar config.js
     //cors instellen op client samen met AllowCredentials()!!!
     let connection =
-        new signalR.HubConnectionBuilder().withUrl(remoteHost + "/chatHub")
+        new signalR.HubConnectionBuilder()
+            .withUrl(remoteHost + "/chatHub")
             .configureLogging(signalR.LogLevel.Error)
+            .withAutomaticReconnect()
             .build();
 
     connection.start().catch(function (err) {
@@ -24,6 +26,7 @@ realtime.hub = (() => {
     let start = document.addEventListener("DOMContentLoaded", (event) => {
         console.log("DOM fully loaded and parsed");
         addHandlers();
+       
     });
 
     let addHandlers = () => {
@@ -45,30 +48,30 @@ realtime.hub = (() => {
                 });
         })
     }
-        document.getElementById("selectImg").addEventListener("change", (event) => {
-            //meerdere beelden ontvangen onChange
-            for (let i = 0; i < event.currentTarget.files.length; i++) {
-                let file = event.currentTarget.files[i];  //een object "File" 
-                // een base64 reader encodeert het image na volledig inlezen (loadend)
-                //fetch verstuurt (POST) de sting naar een api controller (MVC)
-                let reader = new FileReader();
-                reader.onloadend = (evt) => {
-                    let result = reader.result;
-                    fetch(remoteHost + "/api/fileupload/uploadfilebyJS",
-                        {
-                            method: "POST",
-                            body: JSON.stringify({
-                                "formFile": result,
-                                "fileName": file.name
-                            }),
-                            headers: {
-                                'content-type': 'application/json'
-                            }
-                        })
-                        .then((response) => console.log(response));//Accepted return 
-                };
-                reader.readAsDataURL(file); //leest in als base 64
+    document.getElementById("selectImg").addEventListener("change", (event) => {
+        //meerdere beelden ontvangen onChange
+        for (let i = 0; i < event.currentTarget.files.length; i++) {
+            let file = event.currentTarget.files[i];  //een object "File" 
+            // een base64 reader encodeert het image na volledig inlezen (loadend)
+            //fetch verstuurt (POST) de sting naar een api controller (MVC)
+            let reader = new FileReader();
+            reader.onloadend = (evt) => {
+                let result = reader.result;
+                fetch(remoteHost + "/api/fileupload/uploadfilebyJS",
+                    {
+                        method: "POST",
+                        body: JSON.stringify({
+                            "formFile": result,
+                            "fileName": file.name
+                        }),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
+                    })
+                    .then((response) => console.log(response));//Accepted return 
             };
+            reader.readAsDataURL(file); //leest in als base 64
+        };
     });
 
     //server messages ------------------------
@@ -86,12 +89,12 @@ realtime.hub = (() => {
         var msg = jsonMsg.message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         //message configuraties of properties 
         realtime.hub.socketColor = realtime.hub.socketColor ? realtime.hub.socketColor : jsonMsg.color;
-       // realtime.hub.username = realtime.hub.username ? realtime.hub.username: jsonMsg.user;
+        // realtime.hub.username = realtime.hub.username ? realtime.hub.username: jsonMsg.user;
 
 
         var li = document.createElement("li");
         li.style.color = jsonMsg.color;
-        li.textContent = (jsonMsg.user != undefined ? jsonMsg.user + ": " : "") +unescape(msg);
+        li.textContent = (jsonMsg.user != undefined ? jsonMsg.user + ": " : "") + unescape(msg);
         messagesList.insertBefore(li, messagesList.childNodes[0]);
         //input ledigen
         document.getElementById("messageInput") = "";
