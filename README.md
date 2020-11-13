@@ -7,7 +7,7 @@ Ook studenten kunnen/mogen aanpassingen posten.
 # Microservices - eigenschappen
 Recipes_DB services (Docker container): 
 - RepoPattern (Een onbestaande categorie wordt bij opvoeren ve gerecht automatisch aangemaakt en informeert de user).
-- Errorcontroller.
+- Errorcontroller met hardcoded loggen van errors (Serilog).
 - GetCategories informeert de Hub RealTime indien een request kwam (illustreert Hubdependancy)
 - Seeder maakt database en content aan op Docker.
 
