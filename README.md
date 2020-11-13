@@ -10,17 +10,21 @@ Recipes_DB services (Docker container):
 - Errorcontroller.
 - GetCategories informeert de Hub (RealTime) over bevraging.
 - Seeder maakt database en content aan op Docker.
+
 Recipes-Unittesten en integratietesten.
 - worden niet gebuild in de container (performanter).
 - unittesten worden uitgevoerd bij het maken van de Recipes_DB container en moeten succesvol zijn.
+
 CartServices en OrderServices (Beide in eigen Docker container):
 - bestellen van gerechten.
 - OrderService wordt geïnformeerd via AMQP (RabbitMQ).
 - authenticatie is nodig en gebruikt JWT.
 - Seeder maakt bestelling aan op bestaand UserId
+
 RealtimeServices (Docker Container)
 - chatten verloopt via objecten.
 - images worden realtime verstuurd als base64.
+
 Docker-compose verzorgt het beheer van de microservices
 
 # Identity-services
