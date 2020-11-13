@@ -114,7 +114,10 @@ namespace APIGateway
                                     "<li><a href='/categories'>Lijst van categori&euml;n-API </a></li>" +
                                     "<li><a href='/recipes'>Lijst van gerechten-API </a></li>" +
                                     "<li><a href='/carts'>Shopping cart-API van onze testuser.(Beveiligd &#x1F61C; )</a></li>" +
-                                    "</ul>") 
+                                       "</ul></br>" +
+                                    "<ul>" +
+                                    "<li><a href='https://localhost:44361' target='_blank' rel='noopener noreferrer'/>AdminCorner op andere webserver.(IdentityServices)</a></li>" +
+                                    "</ul>")
                                 ;
                         };
                     });

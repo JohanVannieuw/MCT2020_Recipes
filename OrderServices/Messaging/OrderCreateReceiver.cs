@@ -46,15 +46,19 @@ namespace OrderServices.Messaging
                 Password = _password
             };
 
-            //durable : true (order niet noodzakelijk gestart)
-            _connection = factory.CreateConnection();
-            //     _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
-            _channel = _connection.CreateModel();
-            //declaratie moet overeenstemmen met sender queue: BasicPublish zonder routingkey
-            _channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
-         // _channel.QueueBind(queue: _queueName, exchange: "", routingKey: "Cart"); 
-       
-        
+            try {
+                //durable : true (order niet noodzakelijk gestart)
+                _connection = factory.CreateConnection();
+                //     _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
+                _channel = _connection.CreateModel();
+                //declaratie moet overeenstemmen met sender queue: BasicPublish zonder routingkey
+                _channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+                // _channel.QueueBind(queue: _queueName, exchange: "", routingKey: "Cart"); 
+
+            }
+            catch(Exception exc) {
+                Console.WriteLine($"Broker not ready yet.{exc.Message }");
+            } 
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

@@ -28,7 +28,9 @@ ApplyFormatInEditMode = true)]
 
         public bool? Vegetarian { get; set; }
 
-
+        [NotMapped]
+        //[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string UserInfo { get; set; } = null;
 
 
         public virtual Category Category { get; set; }

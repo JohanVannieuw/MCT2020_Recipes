@@ -117,7 +117,7 @@ namespace CartServices.Controllers
                     return BadRequest($"Je moet minstens één item bestellen in je shoppingcart {cart.Id}");
                 }
 
-                cartSender.SendCart(cart);
+                await Task.Run(()=>cartSender.SendCart(cart));
                 return new OkResult();
             }
             catch (Exception ex)

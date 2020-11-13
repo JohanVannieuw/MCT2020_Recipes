@@ -47,7 +47,9 @@ public class GenericRepo<TEntity> : IGenericRepo<TEntity> where TEntity : class
     public async Task<TEntity> GetAsyncByGuid(Guid Id)
     {
         //enkel bruikbaar bij een guid Key
-        return await _context.Set<TEntity>().FindAsync(Id);
+        var entity = await _context.Set<TEntity>().FindAsync(Id);
+        _context.Entry(entity).State = EntityState.Detached; //AsNoTracking() bestaat niet bij FindAsync
+        return entity;
     }
 
     public async Task<TEntity> Create(TEntity entity)

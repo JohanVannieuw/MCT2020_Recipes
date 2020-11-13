@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Hosting;
 using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +18,7 @@ namespace IdentityServices.Data
             try
             {
                 //inlezen vanop Setup
-                var contentRoot = env.ContentRootPath;
+                var contentRootPath = env.ContentRootPath;
                 var webroot = env.WebRootPath;
 
                 await SeedRoles(roleManager);
@@ -29,9 +28,12 @@ namespace IdentityServices.Data
                 await context.SaveChangesAsync();
 
                 await SeedUsers(userManager, roleManager);
+                ////TODO: await SeedUsersFromFile();
+                //await SeedUsersFromFile(contentRootPath, userManager, roleManager, context);
+
                 await context.SaveChangesAsync();
 
-                //TODO: await SeedUsersFromFile();
+
 
             }
             catch
@@ -45,28 +47,28 @@ namespace IdentityServices.Data
 
         private async static Task SeedUsers(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-                if (userManager.FindByNameAsync("Customer@1").Result == null)
+            if (userManager.FindByNameAsync("Customer@1").Result == null)
+            {
+                User customer1 = new User
                 {
-                    User customer1 = new User
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        UserName = "Customer@1",
-                        Email = "customer1@howest.be",
-                        CardNumber = "2222 2222 2222 2222"
-                    };
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = "Customer@1",
+                    Email = "customer1@howest.be",
+                    CardNumber = "2222 2222 2222 2222"
+                };
 
-                    var userResult = await userManager.CreateAsync(customer1, "Customer@1");
-                    await userManager.AddToRoleAsync(customer1, "Customer" );
+                var userResult = await userManager.CreateAsync(customer1, "Customer@1");
+                await userManager.AddToRoleAsync(customer1, "Customer");
 
-                    if (!userResult.Succeeded)
-                    {
-                        throw new Exception($"{customer1.Email} not logged in");
-                    }
+                if (!userResult.Succeeded)
+                {
+                    throw new Exception($"{customer1.Email} not logged in");
                 }
             }
-        
+        }
 
-        private async static  Task SeedAdmins(UserManager<User> userManager, RoleManager<Role> roleManager)
+
+        private async static Task SeedAdmins(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             var nmbrAdmins = 2;
             for (var i = 1; i <= nmbrAdmins; i++)
@@ -82,11 +84,12 @@ namespace IdentityServices.Data
                         CardNumber = "1111 1111 1111 1111"
                     };
 
-                    var userResult =await userManager.CreateAsync(admin, "Admin@" + i);
+                    var userResult = await userManager.CreateAsync(admin, "Admin@" + i);
                     var role = roleManager.Roles.Where(r => r.Name.StartsWith("Admin")).FirstAsync().Result;
                     await userManager.AddToRoleAsync(admin, role.Name);
 
-                    if (!userResult.Succeeded) {
+                    if (!userResult.Succeeded)
+                    {
                         throw new Exception($"{admin.Email} not logged in");
                     }
                 }
@@ -106,5 +109,11 @@ namespace IdentityServices.Data
             }
 
         }
+
+
+        //private async static Task SeedUsersFromFile(string contentRootPath, UserManager<User> userManager, RoleManager<Role> roleManager, ApplicationDbContext context)
+        //{
+        //    return ; //not implemented yet
+        //}
     }
 }

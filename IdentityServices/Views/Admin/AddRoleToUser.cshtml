@@ -1,0 +1,37 @@
+﻿@model IdentityServices.ViewModels.RolesForUser_VM
+
+<h3>Assign roles for user:  @Model.User.UserName  </h3>
+<div>with Id: @Model.User.Id</div>
+<hr />
+
+
+<div>
+    @if (@Model.AssignedRoles.Count() > 0)
+    {
+        <u> User @Model.User.UserName has following roles</u>
+        <ul>
+            @foreach (var role in @Model.AssignedRoles)
+            {
+                <li>@role</li>
+            }
+        </ul>
+    }
+</div>
+<div>
+    <u> Select additional or new role if applicable:</u>
+    <form asp-controller="Admin" asp-action="AddUserToRole" style="margin:10px 20px">
+        <input type="hidden" name="UserId" value="@Model.UserId" />
+        <select asp-for="RoleId" asp-items="@(new SelectList(Model.UnAssignedRoles ))">
+            <option>--- Add selected role ---</option>
+        </select>
+        <div style="margin:10px 0">
+            <input class="btn btn-info" value="Assign selected role to user @Model.User.UserName" type="submit" />
+        </div>
+
+    </form>
+</div>
+<div style="margin:20px 0 ">
+    <a asp-action="IndexRoles" class="">Return to roles overview</a><br />
+    <a asp-action="IndexUsers" class="">Return to users overview</a>
+
+</div>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Role>
+@{
+    ViewData["Title"] = "IndexRoles";
+}
+
+<h1>IndexRoles</h1>
+
+@if (!Model.Any())
+{
+    <div>
+        Er zijn nog geen rollen aangemaakt.<br />
+        De eerste rol moet nog worden aangemaakt.
+    </div>
+}
+else
+{
+    <table class="table table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th>Role Id</th>
+                <th>Role name</th>
+                <th>#Users</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id  @Html.DisplayFor(modelItem => item.Id) </td>
+                    <td>@item.Name</td>
+                    <td>
+                        <form asp-action="DeleteRole" asp-route-id="@item.Id" method="post">
+                            <a class="btn btn-sm btn-primary" asp-action="EditRole" asp-route-id="@item.Id">Edit</a>
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Do you really want to delete this role?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+<p>
+    <a class="btn btn-primary" href="/Admin/CreateRole">Add role</a>
+</p>
