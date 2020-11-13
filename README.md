@@ -8,12 +8,13 @@ Ook studenten kunnen/mogen aanpassingen posten.
 Recipes_DB services (Docker container): 
 - RepoPattern (onbestaande categorie bij opvoeren ve gerecht wordt auto-aangemaakt
 - Errorcontroller.
-- GetCategories informeert de Hub (RealTime) over bevraging.
+- GetCategories informeert de Hub RealTime indien een request kwam (illustreert Hubdependancy)
 - Seeder maakt database en content aan op Docker.
 
 Recipes-Unittesten en integratietesten.
 - worden niet gebuild in de container (performanter).
 - unittesten worden uitgevoerd bij het maken van de Recipes_DB container en moeten succesvol zijn.
+- unittesten gebruiken de Recipes_DB seeder als testdata.
 
 CartServices en OrderServices (Beide in eigen Docker container):
 - bestellen van gerechten.
@@ -24,12 +25,14 @@ CartServices en OrderServices (Beide in eigen Docker container):
 RealtimeServices (Docker Container)
 - chatten verloopt via objecten.
 - images worden realtime verstuurd als base64.
+- frontend website met javascript laat realtime testen toe
 
 Docker-compose verzorgt het beheer van de microservices
 
 # Identity-services
 - runnen op een afzonderlijke webserver (=website niet in Docker) en databaseserver(SQL).
 - zowel de IdentityUser (<User>)  als IdentityRole (<Role>)zijn customised 
+- gebruik van standaard UserManager en RoleManager
 - zorgt voor aanmaak van JWT tokens en claims voor doorgeven van informatie naar de microservices.
 - rolemanagement en usermanagement beschikbaar voor de admin via een MVC website met Razor. 
   
