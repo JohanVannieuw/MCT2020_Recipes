@@ -6,21 +6,22 @@ Ook studenten kunnen/mogen aanpassingen posten.
 
 # Microservices - eigenschappen
 Recipes_DB services (Docker container): 
-- RepoPattern (onbestaande categorie bij opvoeren ve gerecht wordt auto-aangemaakt
+- RepoPattern (Een onbestaande categorie wordt bij opvoeren ve gerecht automatisch aangemaakt en informeert de user).
 - Errorcontroller.
 - GetCategories informeert de Hub RealTime indien een request kwam (illustreert Hubdependancy)
 - Seeder maakt database en content aan op Docker.
 
 Recipes-Unittesten en integratietesten.
 - worden niet gebuild in de container (performanter).
-- unittesten worden uitgevoerd bij het maken van de Recipes_DB container en moeten succesvol zijn.
-- unittesten gebruiken de Recipes_DB seeder als testdata.
+- worden opgeroepen in de staging omgeving via Docker-Compose
+- Unittesten worden uitgevoerd bij het maken van de Recipes_DB container en moeten succesvol zijn om online te komen.
+- Unittesten gebruiken de Recipes_DB seeder als testdata.
 
 CartServices en OrderServices (Beide in eigen Docker container):
-- bestellen van gerechten.
-- OrderService wordt geïnformeerd via AMQP (RabbitMQ).
-- authenticatie is nodig en gebruikt JWT.
-- Seeder maakt bestelling aan op bestaand UserId
+- verzorgen samen het bestellen van gerechten voor een ingelogde user.
+- OrderService wordt over een bestelling geïnformeerd door de CartService via AMQP (RabbitMQ).
+- Authenticatie is nodig en gebruikt JWT.
+- Seeder maakt een testbestelling aan op een bestaand UserId.
 
 RealtimeServices (Docker Container)
 - chatten verloopt via objecten.
@@ -32,14 +33,14 @@ Docker-compose verzorgt het beheer van de microservices
 # Identity-services
 - runnen op een afzonderlijke webserver (=website niet in Docker) en databaseserver(SQL).
 - zowel de IdentityUser (<User>)  als IdentityRole (<Role>)zijn customised 
-- gebruik van standaard UserManager en RoleManager
+- maken gebruik van de standaard UserManager en RoleManager
 - zorgt voor aanmaak van JWT tokens en claims voor doorgeven van informatie naar de microservices.
-- rolemanagement en usermanagement beschikbaar voor de admin via een MVC website met Razor. 
+- Rolemanagement en usermanagement zijn beschikbaar voor de admin via een MVC website met Razor. 
   
 # Gateway voor single access point
 - runt in Docker container (ocelot) 
-- single accesspoint naar de andere Docker container services.
-- authenticatie  via een AuthenticationProviderKey
+- is het single accesspoint naar de andere Docker container services.
+- voorziet authenticatie  via een AuthenticationProviderKey
 
 
 
