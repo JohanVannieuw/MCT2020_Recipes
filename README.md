@@ -19,7 +19,8 @@ Recipes-Unittesten en integratietesten.
 
 CartServices en OrderServices (Beide in eigen Docker container):
 - verzorgen samen het bestellen van gerechten voor een ingelogde user.
-- OrderService wordt over een bestelling geïnformeerd door de CartService via AMQP (RabbitMQ).
+- OrderService wordt over een bestelling geïnformeerd door de CartService via AMQP
+- AMQP wordt verzorgd door RabbitMQ in een Docker container.
 - Authenticatie is nodig en gebruikt JWT.
 - Seeder maakt een testbestelling aan op een bestaand UserId.
 
