@@ -133,7 +133,7 @@ public class JWTServices<TEntity> where TEntity : IdentityUser
         {
             identity = (ClaimsIdentity)principal.Identity;
         }
-        catch (NullReferenceException e)
+        catch 
         {
             return Guid.Empty;
         }
@@ -169,6 +169,7 @@ public class JWTServices<TEntity> where TEntity : IdentityUser
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             return null;
         }
     }

@@ -76,7 +76,7 @@ namespace RecipesDB_UnitTests.Controllers
             mockRepo.Setup(repo => repo.GetAllAsync()).ReturnsAsync(recipesList);
             mockCategoryRepo.Setup(repo => repo.GetAllAsync()).ReturnsAsync(categoriesList);
 
-            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache);  //alle args en ‘.Object’ niet vergeten
+            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache, null);  //alle args en ‘.Object’ niet vergeten
 
             //2. ACT met await
             var actionResult = await APIcontroller.GetCategories(); //actienaam..
@@ -106,7 +106,7 @@ namespace RecipesDB_UnitTests.Controllers
 
             mockCategoryRepo.Setup(repo => repo.GetByExpressionAsync(It.IsAny<Expression<Func<Category, bool>>>())).ReturnsAsync(categoriesList.AsQueryable().Where(c => c.Id == testId));
 
-            var APIcontroller = new CategoriesController( mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache);  //alle args en ‘.Object’ niet vergeten
+            var APIcontroller = new CategoriesController( mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache, null);  //alle args en ‘.Object’ niet vergeten
 
             //ACT
             var actionResult = await APIcontroller.GetCategoryById(testId);
@@ -129,7 +129,7 @@ namespace RecipesDB_UnitTests.Controllers
 
             mockCategoryRepo.Setup(repo => repo.GetByExpressionAsync(It.IsAny<Expression<Func<Category, bool>>>())).ReturnsAsync(categoriesList.AsQueryable().Where(c => c.Id == testId));
 
-            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache);  //alle args en ‘.Object’ niet vergeten
+            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache, null);  //alle args en ‘.Object’ niet vergeten
 
             //ACT
             var actionResult = await APIcontroller.GetCategoryById(testId);
@@ -149,7 +149,7 @@ namespace RecipesDB_UnitTests.Controllers
 
             mockCategoryRepo.Setup(repo => repo.GetByExpressionAsync(It.IsAny<Expression<Func<Category, bool>>>())).ReturnsAsync(categoriesList.AsQueryable().Where(c => c.CategoryName == testName));
 
-            var APIcontroller = new CategoriesController( mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache);  //alle args en ‘.Object’ niet vergeten
+            var APIcontroller = new CategoriesController( mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache, null);  //alle args en ‘.Object’ niet vergeten
 
             //ACT 
             var actionResult = await APIcontroller.GetCategoryByName(testName);
@@ -177,7 +177,7 @@ namespace RecipesDB_UnitTests.Controllers
             mockCategoryRepo.Setup(repo => repo.Create(It.IsAny<Category>()))
             .Returns(Task.FromResult(mapper.Map<CategoryEditCreateDTO, Category>(newCategory)));
 
-            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache);  //alle args en ‘.Object’ niet vergeten
+            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache, null);  //alle args en ‘.Object’ niet vergeten
 
             //3. controleer of mockRepo opgeroepen werd;
             mockCategoryRepo.Verify();
@@ -206,7 +206,7 @@ namespace RecipesDB_UnitTests.Controllers
             mockCategoryRepo.Setup(repo => repo.Create(It.IsAny<Category>()))
             //.Returns(Task.FromResult(mapper.ConvertTo_Entity(newTask, ref newTaskEntity))) //cutomised mapper
             .Returns(Task.FromResult(mapper.Map<CategoryEditCreateDTO, Category>(new CategoryEditCreateDTO())));
-            var APIcontroller = new CategoriesController( mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache);
+            var APIcontroller = new CategoriesController( mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache, null);
 
             //3. controleer of mockRepo opgeroepen werd;
             mockCategoryRepo.Verify();
@@ -249,7 +249,7 @@ namespace RecipesDB_UnitTests.Controllers
            // .Returns(Task.FromResult(mapper.Map<CategoryEditCreateDTO, Category>(newCategory2)));
             mockCategoryRepo.Setup(repo => repo.Create(It.IsAny<Category>())).Throws(new Exception());
 
-            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache);  //alle args en ‘.Object’ niet vergeten
+            var APIcontroller = new CategoriesController(mockCategoryRepo.Object, mockRepo.Object, mapper, null, memoryCache, null);  //alle args en ‘.Object’ niet vergeten
 
             //3. controleer of mockRepo opgeroepen werd;
             mockCategoryRepo.Verify();
