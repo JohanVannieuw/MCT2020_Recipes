@@ -4,6 +4,7 @@ using RestaurantServices.Data;
 using RestaurantServices.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -64,6 +65,20 @@ namespace RestaurantServices.Repositories
             return restoEntity;
         }
 
+
+        public IEnumerable<Restaurant> RestaurantJoinedWithReviews()
+        {
+            var resultTyped = context.Restaurants.Aggregate()
+       //Lookup <PK type bij start, FK Type, resultaat type kan ook een Bsondoc zijn>
+       .Lookup<Restaurant, Review, Restaurant>(context.Reviews,
+             res => res.RestaurantId,   //link FROM restaurant...
+             d => d.RestaurantID,  //link TO  review...                                               
+             res => res.Reviews) //return (of een arr. result : res => res["Reviews"])
+       .ToEnumerable();
+
+            return resultTyped;
+        }
+
         public async Task<IEnumerable<Restaurant>> GetRestaurantsByName(string name)
         {
             var query = context.Restaurants.Find(r => r.Name.ToLower().Contains(name.ToLower()));
@@ -102,7 +117,7 @@ namespace RestaurantServices.Repositories
         //HARD DELETE----------------------------
         public async Task<string> RemoveAsync(string id)
         {
-            ObjectId bsonId = (!ObjectId.TryParse(id, out bsonId)) ? ObjectId.Empty : ObjectId.Parse(id);    
+            ObjectId bsonId = (!ObjectId.TryParse(id, out bsonId)) ? ObjectId.Empty : ObjectId.Parse(id);
             Guid restaurantId = (!Guid.TryParse(id, out restaurantId)) ? Guid.Empty : Guid.Parse(id);
 
             await context.Restaurants.DeleteOneAsync(r => r.RestaurantId == restaurantId || r.Id == bsonId.ToString());

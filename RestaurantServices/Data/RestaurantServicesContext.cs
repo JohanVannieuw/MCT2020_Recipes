@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using RestaurantServices.Models;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,9 @@ namespace RestaurantServices.Data
 
         public IMongoCollection<Review> Reviews =>
                         Database.GetCollection<Review>("reviews");
+
+
+        public GridFSBucket ImagesBucket => new GridFSBucket(Database);
 
     }
 }

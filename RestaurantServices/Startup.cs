@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RestaurantServices.Data;
 using RestaurantServices.Repositories;
+using RestaurantServices.Services;
 
 namespace RestaurantServices
 {
@@ -39,6 +40,7 @@ namespace RestaurantServices
             services.AddSingleton<RestaurantServicesContext>();
             services.AddScoped(typeof(IRestaurantRepo), typeof(RestaurantRepo));
             services.AddScoped(typeof(IReviewRepo), typeof(ReviewRepo));
+            services.AddScoped(typeof(IFileHandlers), typeof(FileHandlers));
 
             services.AddScoped<Seeder>();  //gn singleton mogelijk
 

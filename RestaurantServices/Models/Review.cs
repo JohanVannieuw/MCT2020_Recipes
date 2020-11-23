@@ -29,7 +29,7 @@ namespace RestaurantServices.Models
 
         [BsonElement("DateOfCreation")]
         [BsonRepresentation(BsonType.DateTime)]
-        public DateTime DateOfCreation { get; set; }
+        public DateTime DateOfCreation { get; set; } = DateTime.Now;
 
         //navigatie property
         [BsonRepresentation(BsonType.String)]

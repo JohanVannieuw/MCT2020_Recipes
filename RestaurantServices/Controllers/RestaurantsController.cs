@@ -13,6 +13,7 @@ namespace RestaurantServices.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class RestaurantsController : ControllerBase
     {
         private readonly IRestaurantRepo restaurantRepo;
@@ -68,6 +69,13 @@ namespace RestaurantServices.Controllers
 
             // var restoDTO = mapper.Map<RestaurantDTO>(resto);
             return Ok(resto);
+        }
+
+
+        [HttpGet]
+        [Route("/api/RestaurantsJoinedWithReviews")]
+        public IActionResult RestaurantJoinedWithReviews() {
+            return Ok(restaurantRepo.RestaurantJoinedWithReviews());       
         }
 
 

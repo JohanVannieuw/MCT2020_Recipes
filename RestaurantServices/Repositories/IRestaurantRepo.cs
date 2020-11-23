@@ -13,6 +13,9 @@ namespace RestaurantServices.Repositories
         Task<IEnumerable<Restaurant>> GetAll();
         Task<IEnumerable<Restaurant>> GetRestaurantsByName(string name);
         Task<IEnumerable<Review>> GetReviewsForRestaurant(string id);
+
+        IEnumerable<Restaurant> RestaurantJoinedWithReviews();
+
         Task<string> RemoveAsync(string id);
         Task<Restaurant> ReplaceAsync(string id, Restaurant restaurant);
         Task<Restaurant> UpsertAsync(Restaurant restaurant);

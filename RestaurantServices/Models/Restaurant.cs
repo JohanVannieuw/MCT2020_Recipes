@@ -59,6 +59,20 @@ namespace RestaurantServices.Models
         [BsonIgnoreIfNull]
         public string Description { get; set; }
 
+
+        [BsonElement("Addresses")]
+        [BsonIgnoreIfNull]
+        public ICollection<Address> Addresses { get; set; }
+
+        public class Address
+        {
+            [BsonElement("type")]
+            public string AdresType { get; set; }
+            [BsonElement("address")]
+            public string AdressDetails { get; set; }
+        }
+
+
         //navigatie props – Onbestaand in NoSQL! maar toch bruikbaar in C#-------
         [BsonIgnoreIfNull]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

@@ -55,75 +55,77 @@ namespace RestaurantServices.Data
                 }
 
 
-                //3.Reviews toevoegen
-                reviewRepo.CreateAsync(new Review
+                //3.Reviews toevoegen (enkel indien ook restaurants worden toegevoegd)
+                if (Lst_RestaurantGuids.Count != 0)
                 {
-                    Id = new MongoDB.Bson.ObjectId(),
-                    RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
-                    Subject = "Pricing",
-                    Comment = "Too expensive",
-                    Quotation = 4.5M
+                    reviewRepo.CreateAsync(new Review
+                    {
+                        Id = new MongoDB.Bson.ObjectId(),
+                        RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
+                        Subject = "Pricing",
+                        Comment = "Too expensive",
+                        Quotation = 4.5M
 
-                });
-                reviewRepo.CreateAsync(new Review
-                {
-                    Id = new MongoDB.Bson.ObjectId(),
-                    RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
-                    Subject = "Location",
-                    Comment = "Nice location in beautiful city.",
-                    Quotation = 7.2M
+                    });
+                    reviewRepo.CreateAsync(new Review
+                    {
+                        Id = new MongoDB.Bson.ObjectId(),
+                        RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
+                        Subject = "Location",
+                        Comment = "Nice location in beautiful city.",
+                        Quotation = 7.2M
 
-                });
+                    });
 
-                reviewRepo.CreateAsync(new Review
-                {
-                    Id = new MongoDB.Bson.ObjectId(),
-                    RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
-                    Subject = "Service",
-                    Comment = "Excellent",
-                    Quotation = 8.0M
-                });
+                    reviewRepo.CreateAsync(new Review
+                    {
+                        Id = new MongoDB.Bson.ObjectId(),
+                        RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
+                        Subject = "Service",
+                        Comment = "Excellent",
+                        Quotation = 8.0M
+                    });
 
 
-                reviewRepo.CreateAsync(new Review
-                {
-                    Id = new MongoDB.Bson.ObjectId(),
-                    RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
-                    Subject = "Location",
-                    Comment = "Difficult to find.",
-                    Quotation = 5
+                    reviewRepo.CreateAsync(new Review
+                    {
+                        Id = new MongoDB.Bson.ObjectId(),
+                        RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
+                        Subject = "Location",
+                        Comment = "Difficult to find.",
+                        Quotation = 5
 
-                });
+                    });
 
-                reviewRepo.CreateAsync(new Review
-                {
-                    Id = new MongoDB.Bson.ObjectId(),
-                    RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
-                    Subject = "Location",
-                    Comment = "Beautiful garden and sunny terrace.",
-                    Quotation = 6
+                    reviewRepo.CreateAsync(new Review
+                    {
+                        Id = new MongoDB.Bson.ObjectId(),
+                        RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
+                        Subject = "Location",
+                        Comment = "Beautiful garden and sunny terrace.",
+                        Quotation = 6
 
-                });
+                    });
 
-                reviewRepo.CreateAsync(new Review
-                {
-                    Id = new MongoDB.Bson.ObjectId(),
-                    RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
-                    Subject = "Food",
-                    Comment = "Excellent BBQ.",
-                    Quotation = 8
+                    reviewRepo.CreateAsync(new Review
+                    {
+                        Id = new MongoDB.Bson.ObjectId(),
+                        RestaurantID = Lst_RestaurantGuids[new Random().Next(Lst_RestaurantGuids.Count)],
+                        Subject = "Food",
+                        Comment = "Excellent BBQ.",
+                        Quotation = 8
 
-                });
+                    });
 
-                //zoekindexen aanmaken op Mongo
-                IndexKeysDefinition<Review> keys = "{ RestaurantID: 1 }";
-                var indexModel = new CreateIndexModel<Review>(keys);
-                context.Reviews.Indexes.CreateOneAsync(indexModel);
+                    //zoekindexen aanmaken op Mongo
+                    IndexKeysDefinition<Review> keys = "{ RestaurantID: 1 }";
+                    var indexModel = new CreateIndexModel<Review>(keys);
+                    context.Reviews.Indexes.CreateOneAsync(indexModel);
 
-                IndexKeysDefinition<Restaurant> Restaurantkeys = "{ RestaurantID: 1 }";
-                var indexModelComment = new CreateIndexModel<Restaurant>(Restaurantkeys);
-                context.Restaurants.Indexes.CreateOneAsync(indexModelComment);
-
+                    IndexKeysDefinition<Restaurant> Restaurantkeys = "{ RestaurantID: 1 }";
+                    var indexModelComment = new CreateIndexModel<Restaurant>(Restaurantkeys);
+                    context.Restaurants.Indexes.CreateOneAsync(indexModelComment);
+                }
             }
             catch (Exception exc)
             {
