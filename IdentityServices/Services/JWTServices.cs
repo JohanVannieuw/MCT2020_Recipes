@@ -137,7 +137,7 @@ public class JWTServices<TEntity> where TEntity : IdentityUser
         {
             return Guid.Empty;
         }
-        var userIdClaim = identity.FindFirst("userId");
+        var userIdClaim = identity.FindFirst("thisUserId");
         var userId = new Guid(userIdClaim.Value);
         return userId;
     }

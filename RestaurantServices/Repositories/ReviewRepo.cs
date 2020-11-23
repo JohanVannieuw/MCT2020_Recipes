@@ -45,16 +45,13 @@ namespace RestaurantServices.Repositories
             throw new NotImplementedException();
         }
 
+        //UPDATE ------- 
         public Guid Update(Guid restaurantId, int newQuotation)
         {
             throw new NotImplementedException();
         }
 
-        //UPDATE ------- 
-
-
-
-        //DELETE ------
+        //HARD DELETE ------
 
 
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RestaurantServices.Models
@@ -22,6 +23,7 @@ namespace RestaurantServices.Models
         public Guid RestaurantId { get; set; } = Guid.NewGuid();
 
         [BsonElement("RestaurantName")]
+        [JsonPropertyName("RestaurantName")]
         public string Name { get; set; }
 
         public string Street { get; set; }
@@ -32,21 +34,25 @@ namespace RestaurantServices.Models
 
         [BsonElement("City")]
         [Column("City")]
+        [JsonPropertyName("City")]
         public string Main_city_name { get; set; }
 
         [BsonIgnoreIfNull()]
         [BsonElement("Latitude")]
         [BsonRepresentation(BsonType.Decimal128)]
+        [JsonPropertyName("Latitude")]
         public decimal Lat { get; set; }
 
         [BsonIgnoreIfNull]
         [BsonElement("Longitude")]
         [BsonRepresentation(BsonType.Decimal128)]
+        [JsonPropertyName("Longitude")]
         [Column("Longitude")]
         public decimal Long { get; set; }
 
         [BsonIgnoreIfNull]
         [BsonElement("Phone")]
+        [JsonPropertyName("Phone")]
         [Column("Phone")]
         public string Phone1 { get; set; }
 
